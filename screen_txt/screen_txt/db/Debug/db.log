@@ -1,0 +1,3 @@
+﻿  db.c
+C:\Users\918\Desktop\screen_txt\screen_txt\db\db.c(430,14): warning C4013: 'getch'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  db.vcxproj -> C:\Users\918\Desktop\screen_txt\screen_txt\db\Debug\db.exe
