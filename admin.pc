@@ -24,7 +24,7 @@ void clrscr(void) ;
 
 void DB_connect();
 void add_book();
-void search_book();
+void book_detail();
 void delete_book();
 void update_book();
 void update_status();
@@ -32,6 +32,7 @@ void add_user();
 void search_user();
 void delete_user();
 void update_user();
+void manage_loan();
 
 void sql_error(char *msg) ;
 
@@ -40,9 +41,9 @@ void sql_error(char *msg) ;
 
 void main()
 {
-	DB_connect();
-
-	getch();
+    DB_connect();
+    search_user();
+    getch();
 }
 void DB_connect()
 {
@@ -71,117 +72,32 @@ EXEC SQL END DECLARE SECTION;
     printf("Oracle Connect SUCCESS by %s\n", uid.arr);
 }
 
-void add_book()
-{
-EXEC SQL BEGIN DECLARE SECTION;
-   char dynstmt[1000];
-EXEC SQL END DECLARE SECTION;
-
-    char num[5];
-    char title[17];
-    char author[16];
-    char publisher[16];
-
-   /* Register sql_error() as the error handler. */
-   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-   clrscr();
-
-   /* 도서 번호 입력 */
-    gotoxy(20,7)  ; 
-    gets(num);
-    
-   /* 책 이름 입력 */
-    gotoxy(20,9)  ;
-    gets(title);
-
-   /* 저자 입력 */
-    gotoxy(20,11) ;
-    gets(author);
-
-   /* 출판사 입력 */
-    gotoxy(20,13) ;
-    gets(publisher);
-
-    sprintf(dynstmt,"INSERT INTO BOOKS VALUES ( %s, '%s', '%s', '%s')" ,num, title, author, publisher);
-
-    printf("stmt:%s\n", dynstmt);
-   /* 실행시킬 SQL 문장*/
-    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
-
-    EXEC SQL COMMIT WORK ;
-}
-
-void search_book()
-{
-EXEC SQL BEGIN DECLARE SECTION;
-   char dynstmt[1000];
-EXEC SQL END DECLARE SECTION;
-
-    char title[17];
-    char author[16];
-
-   /* Register sql_error() as the error handler. */
-   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-   clrscr();
-    
-   /* 책 이름 입력 */
-    gotoxy(20,7)  ;
-    gets(title);
-
-   /* 저자 입력 */
-    gotoxy(20,9) ;
-    gets(author);
-
-    sprintf(dynstmt,"SELECT BOOK_NUMBER, BOOK_TITLE, BOOK_AUTHOR, BOOK_PUBLISHER FROM BOOKS where BOOK_TITLE LIKE '%%%s%%' and BOOK_AUTHOR LIKE '%%%s%%'  ",
-                    title, author); 
-
-    printf("stmt:%s\n", dynstmt);
-   /* 실행시킬 SQL 문장*/
-    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
-
-    EXEC SQL WHENEVER NOT FOUND STOP;
-
-    EXEC SQL COMMIT WORK ;
-}
-
 void update_book()
 {
 EXEC SQL BEGIN DECLARE SECTION;
-   char dynstmt[1000];
+    char dynstmt[1000];
 EXEC SQL END DECLARE SECTION;
 
-    char num[5];
-    char title[17];
-    char author[16];
-    char publisher[16];
+    char* num;
+    char* title;
+    char* author;
+    char* publisher;
+
+    num = "810001";
+    title = "한국문학(1권)";
+    author = "정현수";
+    publisher = "z출판사";
 
    /* Register sql_error() as the error handler. */
    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-   clrscr();
 
-   /* 도서 번호 입력 */
-    gotoxy(20,7)  ; 
-    gets(num);
-    
-   /* 책 이름 입력 */
-    gotoxy(20,9)  ;
-    gets(title);
 
-   /* 저자 입력 */
-    gotoxy(20,11) ;
-    gets(author);
-
-   /* 출판사 입력 */
-    gotoxy(20,13) ;
-    gets(publisher);
-
-    sprintf(dynstmt,"UPDATE BOOKS SET BOOK_NUMBER = %s, BOOK_TITLE= %s,BOOK_AUTHOR = %s, BOOK_PUBLISHER = '%s where BOOK_NUMBER = %s ", num, title, author, publisher, num);
+    /* 실행시킬 SQL 문장*/
+sprintf(dynstmt, "UPDATE books SET book_title = %s, book_author = %s, book_publisher = %s WHERE book_number = %s", title, author, publisher, num);
 
     printf("stmt:%s\n", dynstmt);
-   /* 실행시킬 SQL 문장*/
-    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
 
-    EXEC SQL WHENEVER NOT FOUND STOP;
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
 
     EXEC SQL COMMIT WORK ;
 }
@@ -189,249 +105,171 @@ EXEC SQL END DECLARE SECTION;
 void delete_book()
 {
 EXEC SQL BEGIN DECLARE SECTION;
-   char dynstmt[1000];
+    char dynstmt[1000];
 EXEC SQL END DECLARE SECTION;
 
-    char num[5];
-    char title[17];
-    char author[16];
-    char publisher[16];
-    char flag;
+    char* num;
+
+    num = "810001";
 
    /* Register sql_error() as the error handler. */
    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-   clrscr();
 
-   printf("삭제할 책 이름을 입력하세요 : !!\n") ;   
-   gets(title) ;
 
-   printf("삭제할 도서 번호을 입력하세요 : !!\n") ;   
-   gets(num) ;
-
-   printf("해당 책을 삭제하시겠습니까? (y/n) :");   
-
-   flag = (char *)getch() ;
-
-   if( flag == 'y' || flag =='Y' ){
-       sprintf(dynstmt,"DELETE FROM BOOKS WHERE BOOK_TITLE = %s AND BOOK_NUMBER = %s ", title, num);
-       printf("stmt:%s\n", dynstmt);
-       EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
-
-       EXEC SQL WHENEVER NOT FOUND STOP;
-
-       EXEC SQL COMMIT WORK ; 
-   }
-   else {
-       printf("삭제를 취소합니다.\n");
-   }
-}
-
-void update_status()
-{
-EXEC SQL BEGIN DECLARE SECTION;
-   char dynstmt[1000];
-EXEC SQL END DECLARE SECTION;
-
-    char book_num[5];
-    char user_num[5];
-    char loan_date[5];
-    char due_date[5];
-    char is_available[5];
-
-   /* Register sql_error() as the error handler. */
-   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-   clrscr();
-
-   /* 도서 번호 입력 */
-    gotoxy(20,7); 
-    gets(book_num);
-    
-   /* 회원 번호 입력 */
-    gotoxy(20,9);
-    gets(user_num);
-
-   /* 대여 날짜 입력 */
-    gotoxy(20,11) ;
-    gets(loan_date);
-
-   /* 반납 마감 일자 입력 */
-    gotoxy(20,13);
-    gets(due_date);
-
-   /* 반납 여부 입력 */
-    gotoxy(20,15);
-    gets(is_available);
-
-    sprintf(dynstmt,"UPDATE STATUS SET BOOK_DEUDATE= %s, BOOK_ISAVAILABLE = %s where BOOK_NUMBER = %s and USER_NUMBER = %s and BOOK_LOANDATE = %s", due_date, is_available, book_num, user_num, loan_date);
-
+    /* 실행시킬 SQL 문장*/
+    sprintf(dynstmt, "DELETE FROM books WHERE book_number = %s", num);
     printf("stmt:%s\n", dynstmt);
-   /* 실행시킬 SQL 문장*/
-    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
 
-    EXEC SQL WHENEVER NOT FOUND STOP;
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
 
     EXEC SQL COMMIT WORK ;
 }
 
-void add_user()
+void add_book()
 {
 EXEC SQL BEGIN DECLARE SECTION;
-   char dynstmt[1000];
+    char dynstmt[1000];
 EXEC SQL END DECLARE SECTION;
 
-    char num[5];
-    char name[17];
-    int loan;
-    int overdue;
+    char* num;
+    char* title;
+    char* author;
+    char* publisher;
+    char* code;
+    char* loan_status;
+
+    num = "810001";
+    title = "한국문학(1권)";
+    author = "정현수";
+    publisher = "z출판사";
+    code = "800";
+    loan_status = "대출가능";
 
    /* Register sql_error() as the error handler. */
    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-   clrscr();
 
-   /* 회원 이름 입력 */
-    gotoxy(20,7)  ; 
-    gets(name);
-    
-   /* 회원 번호 입력 */
-    gotoxy(20,9)  ;
-    gets(num);
-
-    loan = 0;
-    overdue = 0;
-
-
-    sprintf(dynstmt,"INSERT INTO USERS VALUES ( %s, '%s', '%d', '%d')" ,num, name, loan, overdue);
+    sprintf(dynstmt, "INSERT INTO BOOKS VALUES ( '%s', '%s', '%s', '%s', '%s', '%s')", num, title, author, publisher, code, loan_status);
 
     printf("stmt:%s\n", dynstmt);
+
    /* 실행시킬 SQL 문장*/
     EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
 
     EXEC SQL COMMIT WORK ;
+}
+
+void loan()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+    char* num;
+    char* loan_status;
+
+    num = "810001";
+    loan_status = "대출 중";
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+    /* 실행시킬 SQL 문장*/
+    sprintf(dynstmt, "UPDATE loan SET loan_status = '%s' WHERE book_number = '%s'", loan_status, num);
+
+    printf("stmt:%s\n", dynstmt);
+
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
+
+    EXEC SQL COMMIT WORK ;
+}
+
+void return_book()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+    char* num;
+    char* loan_status;
+
+    num = "810001";
+    loan_status = "대출가능";
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+    /* 실행시킬 SQL 문장*/
+sprintf(dynstmt, "UPDATE loan SET loan_status = '%s' WHERE book_number = '%s'", loan_status, num);
+
+    printf("stmt:%s\n", dynstmt);
+
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
+
+    EXEC SQL COMMIT WORK ;
+}
+
+void manage_loan() 
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar v_user_num[12];
+    varchar v_book_num[12];
+    varchar v_loan_date[12];
+    varchar v_due_date[12];
+    varchar v_loan_status[8];
+EXEC SQL END DECLARE SECTION;
+
+
+    /* Register sql_error() as the error handler. */
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+    /* 실행시킬 SQL 문장*/
+    EXEC SQL SELECT book_number, user_number, TO_CHAR(book_loandate, 'YY/MM/DD'),  TO_CHAR(book_duedate, 'YY/MM/DD'), loan_status
+                     INTO :v_book_num, :v_user_num, :v_loan_date, :v_due_date, :v_loan_status
+                  FROM loan;
+
+/*
+    v_user_num.arr[v_user_num.len] = '\0';
+    v_book_num.arr[v_book_num.len] = '\0';
+    v_loan_date.arr[v_loan_date.len] = '\0';
+    v_due_date.arr[v_due_date.len] = '\0';
+    v_loan_status.arr[v_loan_status.len] = '\0';
+*/
+    printf("v_book_num= %s, v_user_num= %s, v_loan_date= %s, v_due_date= %s, v_loan_status= %s \n", v_book_num.arr, v_user_num.arr, v_loan_date.arr, v_due_date.arr, v_loan_status.arr);
 }
 
 void search_user()
 {
 EXEC SQL BEGIN DECLARE SECTION;
-   char dynstmt[1000];
+    char dynstmt[1000];
+    varchar v_user_num[10];
+    varchar v_user_name[10];
+    varchar v_loans[3];
+    varchar v_overdue[3];
+    varchar input[10];
 EXEC SQL END DECLARE SECTION;
-
-    char num[5];
-    char name[17];
-
+   strcpy((char *)input.arr,"4567");
+   input.len = (short) strlen((char *)input.arr);
 
    /* Register sql_error() as the error handler. */
    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-   clrscr();
-    
-   /* 회원 이름 입력 */
-    gotoxy(20,7)  ;
-    gets(name);
 
-   /* 회원 번호 입력 */
-    gotoxy(20,9) ;
-    gets(num);
+    /* 실행시킬 SQL 문장*/
+    EXEC SQL SELECT user_number, user_name, TO_CHAR(user_loans), TO_CHAR(user_overdue)
+                     INTO :v_user_num, :v_user_name, :v_loans, :v_overdue
+                  FROM users
+                  WHERE user_number = :input OR user_name = :input;
 
-    sprintf(dynstmt,"SELECT USER_NAME, USER_NUMBER, USER_LOANS, USER_OVERDUE FROM USERS WHERE USER_NAME LIKE '%%%s%%' AND USER_NUMBER LIKE '%%%s%%'",
-                    name, num); 
+    v_user_num.arr[v_user_num.len] = '\0';
+    v_user_name.arr[v_user_name.len] = '\0';
+    v_loans.arr[v_loans.len] = '\0';
+    v_overdue.arr[v_overdue.len] = '\0';
 
-    printf("stmt:%s\n", dynstmt);
-   /* 실행시킬 SQL 문장*/
-    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
-
-    EXEC SQL WHENEVER NOT FOUND STOP;
-
-    EXEC SQL COMMIT WORK ;
+    printf("v_user_num= %s, v_user_name= %s,v_loans = %s, v_overdue= %s \n", v_user_num.arr, v_user_name.arr,v_loans.arr, v_overdue.arr);
 }
 
-void update_user()
-{
-EXEC SQL BEGIN DECLARE SECTION;
-   char dynstmt[1000];
-EXEC SQL END DECLARE SECTION;
-
-    char num[5];
-    char name[17];
-    char new_num[5];
-    char new_name[17];
-    int loan = 0;
-    int overdue = 0;
-
-   /* Register sql_error() as the error handler. */
-   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-   clrscr();
-
-   /* 기존 회원 이름 입력 */
-    gotoxy(20,7)  ; 
-    gets(name);
-    
-   /* 기존 회원 번호 입력 */
-    gotoxy(20,9)  ;
-    gets(num);
-
-   /* 새로운 회원 이름 입력 */
-    gotoxy(20,11)  ; 
-    gets(name);
-    
-   /* 새로운 회원 번호 입력 */
-    gotoxy(20,13)  ;
-    gets(num);
-
-   /* 대출 권수 입력 */
-    gotoxy(20,15) ;
-    gets(loan);
-
-   /* 연체 일수 입력 */
-    gotoxy(20,17) ;
-    gets(overdue);
-
-    sprintf(dynstmt,"UPDATE USERS SET USER_NAME = %s, USER_NUMBER = %s,USER_LOANS = %d, USER_OVERDUE = '%d WHERE USER_NAME= %s  AND USER_NUMBER= %s", new_name, new_num, loan, overdue, name, num);
-
-    printf("stmt:%s\n", dynstmt);
-   /* 실행시킬 SQL 문장*/
-    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
-
-    EXEC SQL WHENEVER NOT FOUND STOP;
-
-    EXEC SQL COMMIT WORK ;
-}
-
-void delete_user()
-{
-EXEC SQL BEGIN DECLARE SECTION;
-   char dynstmt[1000];
-EXEC SQL END DECLARE SECTION;
-
-    char num[5];
-    char name[17];
-    char flag;
-
-   /* Register sql_error() as the error handler. */
-   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-   clrscr();
-
-   printf("삭제할 회원 이름을 입력하세요 : !!\n") ;   
-   gets(name) ;
-
-   printf("삭제할 회원 번호를 입력하세요 : !!\n") ;   
-   gets(num) ;
-
-   printf("해당 회원을 삭제하시겠습니까? (y/n) :");   
-
-   flag = (char *)getch() ;
-
-   if( flag == 'y' || flag =='Y' ){
-       sprintf(dynstmt,"DELETE FROM USERS WHERE USER_NAME= %s  AND USER_NUMBER= %s", name, num);
-       printf("stmt:%s\n", dynstmt);
-       EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
-
-       EXEC SQL WHENEVER NOT FOUND STOP;
-
-       EXEC SQL COMMIT WORK ; 
-   }
-   else {
-       printf("삭제를 취소합니다.\n");
-   }
-}
 
 
 /* --------------------------------------------------------------------------
