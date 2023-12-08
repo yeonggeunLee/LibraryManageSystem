@@ -33,10 +33,10 @@ EXEC SQL END DECLARE SECTION;
 void main()
 {
 	DB_connect();
-	//Get_user_info();
-             Change_user_info();
+	Get_user_info();
+             //Change_user_info();
              //Delete_user_info();
-             EXEC SQL COMMIT WORK RELEASE ;
+             //EXEC SQL COMMIT WORK RELEASE ;
              //Search_book();
              //Search_my_loan();
 	getch();
@@ -72,22 +72,23 @@ void Get_user_info()
 EXEC SQL BEGIN DECLARE SECTION;
    varchar v_user_number[12];
    varchar v_user_name[12];
-EXEC SQL END DECLARE SECTION;
+   int v_user_loans;
+   int v_user_overdue;
 
+EXEC SQL END DECLARE SECTION;
 
    /* Register sql_error() as the error handler. */
    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
 
-
    /* 실행시킬 SQL 문장*/
-   EXEC SQL SELECT users.user_number, users.user_name
-                    INTO :v_user_number, :v_user_name
+   EXEC SQL SELECT users.user_number, users.user_name, users.user_loans, users.user_overdue
+                    INTO :v_user_number, :v_user_name, :v_user_loans, :v_user_overdue
                  FROM users, logdata
                  WHERE users.user_number = logdata.current_login;
 
    v_user_number.arr[v_user_number.len] = '\0';
    v_user_name.arr[v_user_name.len] = '\0';
-   printf("user_number = %s, user_name = %s \n", v_user_number.arr, v_user_name.arr);
+   printf("user_number = %s, user_name = %s, user_loan = %d, user_overdue = %d \n", v_user_number.arr, v_user_name.arr, v_user_loans, v_user_overdue);
 
 }
 
@@ -285,6 +286,34 @@ EXEC SQL END DECLARE SECTION;
    EXEC SQL CLOSE c_cursor;
 
 }
+
+void Add_book_loan() 
+{
+/*-----------------------------------------------------------------------------------
+2.6 도서 대출
+-------------------------------------------------------------------------------------*/
+
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar v_book_number[12];
+   varchar v_user_number[12];
+   varchar v_loan_status[12];
+
+   char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+   char inputBookNum[20];
+   char inputBookName[20];
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+   printf("대출");
+
+
+}
+
+
+
 
 void Search_my_loan()
 {
