@@ -148,83 +148,126 @@ EXEC SQL END DECLARE SECTION;
 
 void register_user()
 {
-    EXEC SQL BEGIN DECLARE SECTION;
-       varchar v_user_number[12];
-       varchar v_user_name[12];
-       int v_user_loans;
-       int v_user_overdue;
-    EXEC SQL END DECLARE SECTION;
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar v_user_number[12];
+   varchar v_user_name[37];
 
-    /* Register sql_error() as the error handler. */
-    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-    clrscr();
+   char dynstmt[1000];
+   char checkstmt[1000];
+EXEC SQL END DECLARE SECTION;
 
-    printf("사용할 번호를 입력하세요. : ");
-    gets(userNum);
+   char inputUserNum[10];
+   char inputUserName[30];
 
-    printf("사용할 이름을 입력하세요. : ");
-    gets(userName);
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:");
 
-    /* Check if the user_number already exists */
-    EXEC SQL SELECT COUNT(*) INTO :v_user_number FROM users WHERE user_number = :userNum;
+   printf("사용자 번호를 입력하세요 : ");
+   gets(inputUserNum);
 
-    if (v_user_number.len > 0 && v_user_number.arr[0] > '0') {
-        printf("중복된 번호가 있습니다. 회원가입 실패.\n");
-    } else {
-        /* Insert user information into USERS table */
-        sprintf(dynstmt, "INSERT INTO USERS (USER_NUMBER, USER_NAME, USER_LOANS, USER_OVERDUE)
-        VALUES ('%s', '%s', 0, 0)", userNum, userName);
+   printf("사용자 이름을 입력하세요 : ");
+   gets(inputUserName);
 
-        /* Execute the SQL statement */
-        EXEC SQL EXECUTE IMMEDIATE :dynstmt;
+   sprintf(checkstmt, "SELECT USER_NUMBER FROM USERS WHERE USER_NUMBER = %s", inputUserNum);
+   
+   EXEC SQL PREPARE S FROM :checkstmt;
+   
+   /* 커서 선언 */   
+   EXEC SQL DECLARE c_cursor CURSOR FOR S ;
+  
+   /* 커서 오픈 */
+   EXEC SQL OPEN c_cursor;
 
-        /* Commit the transaction */
-        EXEC SQL COMMIT WORK;
+   EXEC SQL FETCH c_cursor INTO :v_user_number;
 
-        printf("회원가입이 완료되었습니다.\n");
-    }
+   v_user_number.arr[v_user_number.len] = '\0' ;
+
+   if (strcmp(v_user_number.arr, inputUserNum) == 0)
+   {
+        printf("중복된 번호가 있습니다.");
+        EXEC SQL CLOSE c_cursor;
+        return;
+   }
+
+   sprintf(dynstmt, "INSERT INTO USERS (USER_NUMBER, USER_NAME) VALUES (%s, '%s')", inputUserNum, inputUserName);
+   
+   printf("dynstmt : %s", dynstmt);
+
+   EXEC SQL PREPARE S FROM :dynstmt;
+   
+   EXEC SQL EXECUTE S;
+
+   printf("회원가입에 성공했습니다.");
+
+   EXEC SQL COMMIT WORK ;
 }
 
 
 
-
-/*--------------------------------------------------------------------------
-1.3 유저 로그인
--------------------------------------------------------------------------- */
 /*--------------------------------------------------------------------------
 1.3 유저 로그인
 -------------------------------------------------------------------------- */
 void login_user()
 {
-    EXEC SQL BEGIN DECLARE SECTION;
-    varchar v_user_number[20];
-    varchar v_user_name[20];
-    varchar input_user_number[20];
-    varchar input_user_name[20];
-    EXEC SQL END DECLARE SECTION;
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar v_user_number[12];
+   varchar v_user_name[37];
 
-    // 로그인 정보 입력
-    printf("\n\n== 로그인 ==\n");
-    printf("아이디(ID): ");
-    gets(input_user_number);
+   char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
 
-    printf("비밀번호(PW): ");
-    gets(input_user_name);
+   char inputUserNum[10];
+   char inputUserName[30];
+   int loginSuccess = 0;
 
-    // 로그인을 위한 sql 문장
-    EXEC SQL SELECT USER_NUMBER, USER_NAME INTO :v_user_number, :v_user_name
-             FROM USERS
-             WHERE USER_NUMBER = :input_user_number AND USER_NAME = :input_user_name;
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:
+");
 
-    if (sqlca.sqlcode == 0)
+   printf("사용자 번호를 입력하세요 : ");
+   gets(inputUserNum);
+
+   printf("사용자 이름을 입력하세요 : ");
+   gets(inputUserName);
+
+   sprintf(dynstmt, "SELECT USER_NUMBER, USER_NAME FROM USERS WHERE USER_NUMBER = %s AND USER_NAME = '%s'", inputUserNum, inputUserName);
+   
+   printf("dynstmt : %s
+", dynstmt);
+
+   EXEC SQL PREPARE S FROM :dynstmt;
+   
+   /* 커서 선언 */   
+   EXEC SQL DECLARE c_cursor CURSOR FOR S ;
+  
+   /* 커서 오픈 */
+   EXEC SQL OPEN c_cursor;
+
+   for (;;)
     {
-        printf("로그인 성공! 사용자 번호: %.*s, 사용자 이름: %.*s\n", v_user_number.len, v_user_number.arr, v_user_name.len, v_user_name.arr);
+        EXEC SQL FETCH c_cursor INTO :v_user_number, :v_user_name;
+
+	v_user_number.arr[v_user_number.len] = '\0' ;
+	v_user_name.arr[v_user_name.len] = '\0' ;
+
+	if (strcmp(v_user_number.arr, inputUserNum) == 0 && strcmp(v_user_name.arr, inputUserName) == 0)
+	{
+		printf("로그인에 성공했습니다.
+");
+                loginSuccess = 1;
+		break;
+	}
     }
-    else
-    {
-        printf("로그인 실패. 아이디 또는 비밀번호를 확인하세요.\n");
-    }
+   
+   if (loginSuccess == 0)
+   {
+        printf("아이디나 비밀번호를 확인해주세요.
+");
+   }
+
+   EXEC SQL CLOSE c_cursor;
 }
+
 
 
 
