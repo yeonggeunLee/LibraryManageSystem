@@ -33,7 +33,7 @@ EXEC SQL END DECLARE SECTION;
 void main()
 {
 	DB_connect();
-	Get_user_info();
+	//Get_user_info();
              //Change_user_info();
              //Delete_user_info();
              //EXEC SQL COMMIT WORK RELEASE ;
@@ -126,8 +126,15 @@ void Change_user_info()
 
     EXEC SQL SELECT current_login INTO :v_current_login
                   FROM logdata;
-    
+
+    EXEC SQL SELECT user_number INTO :v_user_number
+                 FROM users
+                 WHERE user_number = :v_current_login;
+
     v_current_login.arr[v_current_login.len] = '\0';
+    v_user_number.arr[v_user_number.len] = '\0';
+    
+
 
     // 중복된 사용자 번호가 있는지 확인
     // 커서를 사용해서 계속 돌면서 입력값이랑 비교?
@@ -294,20 +301,35 @@ void Add_book_loan()
 -------------------------------------------------------------------------------------*/
 
 EXEC SQL BEGIN DECLARE SECTION;
-   varchar v_book_number[12];
    varchar v_user_number[12];
-   varchar v_loan_status[12];
 
    char dynstmt[1000];
 EXEC SQL END DECLARE SECTION;
 
-   char inputBookNum[20];
-   char inputBookName[20];
 
    /* Register sql_error() as the error handler. */
    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
 
-   printf("대출");
+   /* loan테이블에 넣을 user_number를 현재 로그인 중인 user_number의 값을 가져와서 삽입 */
+   EXEC SQL SELECT users.user_number
+                    INTO :insert_user_number
+                 FROM users, logdata
+                 WHERE users.user_number = logdata.current_login;
+   /* 선택할 행의 책에 대한 정보를 가져온다. */
+   EXEC SELECT book_number, book_title, book_publisher INTO :insert_book_number
+          FROM ( SELECT book_number, book_title, book_publisher, ROWNUM AS row_num FROM books)
+          WHERE row_num = "입력된 행의 번호";
+
+   /* 아래 문장에서 나온 상태가 '대출가능' 일 때만 대출 진행*/
+   EXEC SELECT book_loan_status INTO :check_loan_status FROM books WHERE book_number = insert_book_number;
+
+   /*아래 두 문장은 대출 가능 상태 확인 후 실행*/
+   EXEC SQL INSERT INTO loan (book_number, user_number, loan_status)
+                VALUES (insert_book_number, insert_user_number, '대출중');
+
+   EXEC UPDATE books SET book_loan_status = '대출불가' WHERE  book_number = v_book_number;
+
+
 
 
 }
