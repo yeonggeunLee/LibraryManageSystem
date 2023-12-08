@@ -19,6 +19,7 @@ void mypage();
 void mypage_loanlist();
 void managebook();
 void bookdetail_modify();
+void managebook_loan();
 
 void gotoxy(int x, int y) {
     COORD coord;
@@ -114,7 +115,10 @@ int main() {
                 searchbook();
             }
             if ((strcmp(op, "2") == 0)) {
-                mypage();
+                managebook_loan();
+            }
+            if ((strcmp(op, "3") == 0)) {
+                managebook();
             }
             if ((strcmp(op, "0") == 0)) {
                 memset(&user, 0, sizeof(user));
@@ -301,7 +305,7 @@ void searchbook_resultlist() {
 void bookdetail() {
     char op[20];
 
-    if (user.type == "admin") {
+    if (login_state == 2) {
         system("cls");
         print_screen("admin_bookdetail.txt");
 
@@ -407,17 +411,85 @@ void bookdetail_modify() {
 
     char op[20];
     system("cls");
-    print_screen("admin_managebook_modify.txt");
+    print_screen("admin_bookdetail_modify.txt");
+
+    while (1) {
+        gotoxy(45, 6);
+        fgets(book.number, sizeof(book.number), stdin);
+        book.number[strcspn(book.number, "\n")] = '\0';
+
+        if (strcmp(book.number, "\0") == 0) {
+            MessageBox(NULL, L"도서 번호를 입력해 주세요.", L"알림", MB_OK | MB_ICONINFORMATION);
+
+            continue;
+        }
+        else {
+            break;
+        }
+    }
+
+    while (1) {
+        gotoxy(45, 8);
+        fgets(book.title, sizeof(book.title), stdin);
+        book.title[strcspn(book.title, "\n")] = '\0';
+
+        if (strcmp(book.title, "\0") == 0) {
+            MessageBox(NULL, L"도서 제목을 입력해 주세요.", L"알림", MB_OK | MB_ICONINFORMATION);
+
+            continue;
+        }
+        else {
+            break;
+        }
+    }
+
+    while (1) {
+        gotoxy(45, 10);
+        fgets(book.author, sizeof(book.author), stdin);
+        book.author[strcspn(book.author, "\n")] = '\0';
+
+        if (strcmp(user.id, "\0") == 0) {
+            MessageBox(NULL, L"도서 저자를 입력해 주세요.", L"알림", MB_OK | MB_ICONINFORMATION);
+
+            continue;
+        }
+        else {
+            break;
+        }
+    }
+
+    while (1) {
+        gotoxy(45, 12);
+        fgets(book.publisher, sizeof(book.publisher), stdin);
+        book.publisher[strcspn(book.publisher, "\n")] = '\0';
+
+        if (strcmp(book.publisher, "\0") == 0) {
+            MessageBox(NULL, L"도서 출판사를 입력해 주세요.", L"알림", MB_OK | MB_ICONINFORMATION);
+
+            continue;
+        }
+        else {
+            break;
+        }
+    }
+
+    MessageBox(NULL, L"도서 정보 수정 완료.", L"알림", MB_OK | MB_ICONINFORMATION);
+    bookdetail();
+}
+
+void managebook_loan() {
+    char id[20];
+    system("cls");
+    print_screen("admin_managebook_loan.txt");
 
     gotoxy(2, 20);
-    fgets(op, sizeof(op), stdin);
-    op[strcspn(op, "\n")] = '\0';
+    fgets(id, sizeof(id), stdin);
+    id[strcspn(id, "\n")] = '\0';
 
-    if ((strcmp(op, "1") == 0)) {
+    if ((strcmp(id, "1") == 0)) {
         bookdetail();
 
     }
-
 }
 
 void print_screen(char fname[])
