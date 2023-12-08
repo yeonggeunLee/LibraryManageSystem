@@ -1,0 +1,361 @@
+// win32 Visual C 컴파일시 추가
+// 프로그램 가장 첫 줄에 추가할 것
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <conio.h>
+
+/* for oracle */
+#include <sqlda.h>
+#include <sqlca.h>
+#include <sqlcpr.h>
+
+void DB_connect();
+void Get_user_info();
+void Change_user_info();
+void Delete_user_info();
+void Search_book();
+void Search_my_loan();
+void sql_error(char *msg) ;
+
+EXEC SQL BEGIN DECLARE SECTION;
+	VARCHAR uid[80];
+	VARCHAR pwd[20];
+EXEC SQL END DECLARE SECTION;
+
+
+// win32 Visual C 컴파일시 추가
+#define getch() _getch()
+
+void main()
+{
+	DB_connect();
+	//Get_user_info();
+             Change_user_info();
+             //Delete_user_info();
+             EXEC SQL COMMIT WORK RELEASE ;
+             //Search_book();
+             //Search_my_loan();
+	getch();
+}
+void DB_connect()
+{
+   /* 본인 계정이름으로 바꾸어 쓸 것 */
+   strcpy((char *)uid.arr,"b20212952@//sedb.deu.ac.kr:1521/orcl");
+   uid.len = (short) strlen((char *)uid.arr);
+   /* 본인 계정 암호로 바꾸어 쓸 것 */
+   strcpy((char *)pwd.arr,"20212952");
+   pwd.len = (short) strlen((char *)pwd.arr);
+
+   EXEC SQL CONNECT :uid IDENTIFIED BY :pwd;
+
+	// connection이 실패했을경우의 처리부분
+
+	if (sqlca.sqlcode != 0 && sqlca.sqlcode != -1405){ 
+		printf("\7Connect error: %s", sqlca.sqlerrm.sqlerrmc);
+		getch();
+		exit(-1);
+	}
+
+    printf("Oracle Connect SUCCESS by %s\n", uid.arr);
+
+}
+
+void Get_user_info()
+{
+/* --------------------------------------------------------------------------
+2.2 자신의 정보 확인
+-------------------------------------------------------------------------- */
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar v_user_number[12];
+   varchar v_user_name[12];
+EXEC SQL END DECLARE SECTION;
+
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+   /* 실행시킬 SQL 문장*/
+   EXEC SQL SELECT users.user_number, users.user_name
+                    INTO :v_user_number, :v_user_name
+                 FROM users, logdata
+                 WHERE users.user_number = logdata.current_login;
+
+   v_user_number.arr[v_user_number.len] = '\0';
+   v_user_name.arr[v_user_name.len] = '\0';
+   printf("user_number = %s, user_name = %s \n", v_user_number.arr, v_user_name.arr);
+
+}
+
+void Change_user_info()
+{
+/*------------------------------------------------------
+2.3 사용자 정보 수정. 현재 미입력시 안되는중
+------------------------------------------------------*/
+    EXEC SQL BEGIN DECLARE SECTION;
+        varchar v_user_number[12];
+        varchar v_user_name[12];
+        varchar v_current_login[12];
+        varchar v_same_check[12];
+        varchar c_user_number[12];
+        varchar c_user_name[12];
+
+        char dynstmt[1000];
+    EXEC SQL END DECLARE SECTION;
+
+    char changeNum[20];
+    char changeName[20];
+    int count = 0;
+
+    printf("수정할 사용자 번호를 입력하세요 (미입력 시 기존값 사용) : ");
+    gets(changeNum);
+    //strcpy(c_user_number.arr, changeNum);
+    //c_user_number.len = strlen(changeNum);
+
+    printf("수정할 사용자 이름을 입력하세요 (미입력 시 기존값 사용) : ");
+    gets(changeName);
+    //strcpy(c_user_name.arr, changeName);
+    //c_user_name.len = strlen(changeName);
+
+    printf("입력한 사용자 번호 길이 : %d, 입력한 사용자 이름 길이 : %d\n", strlen(changeNum),strlen(changeName));
+
+    EXEC SQL SELECT current_login INTO :v_current_login
+                  FROM logdata;
+    
+    v_current_login.arr[v_current_login.len] = '\0';
+
+    // 중복된 사용자 번호가 있는지 확인
+    // 커서를 사용해서 계속 돌면서 입력값이랑 비교?
+
+    /*--------------------------------------------------------------
+      계속해서 아래와 같이 나오는중
+     수정할 사용자 번호를 입력하세요 (미입력 시 기존값 사용) :
+     수정할 사용자 이름을 입력하세요 (미입력 시 기존값 사용) :
+     입력한 사용자 번호 길이 : 0, 입력한 사용자 이름 길이 : 0
+     기존의 사용자 번호를 사용합니다
+     ORACLE ERROR:
+     ORA-01008: 일부 변수가 바인드되지 않았습니다.
+    ---------------------------------------------------------------*/
+
+    if(strlen(changeNum) == 0) {
+        printf("기존의 사용자 번호를 사용합니다");
+        strcpy(c_user_name.arr, changeName);
+        c_user_name.len = strlen(changeName);
+        c_user_name.arr[c_user_name.len] = '\0';
+        EXEC SQL SELECT users.user_number INTO :c_user_number FROM users, logdata WHERE users.user_number = logdata.current_login;
+        c_user_number.arr[c_user_number.len] = '\0';
+    } else if(strlen(changeName) == 0) {
+        strcpy(c_user_number.arr, changeNum);
+        c_user_number.len = strlen(changeNum);
+        c_user_number.arr[c_user_number.len] = '\0';
+        EXEC SQL SELECT users.user_number, users.user_name INTO :v_same_check, :c_user_name FROM users, logdata WHERE users.user_number = logdata.current_login;
+        v_same_check.arr[v_same_check.len] = '\0';
+
+        if(c_user_number.arr == v_same_check.arr) {
+            printf("이미 존재하는 사용자 번호입니다. 다른 번호를 입력하세요.\n");
+            return;
+        } else {
+              printf("기존의 사용자 이름을 사용합니다");
+              c_user_name.arr[c_user_name.len] = '\0';
+        }
+
+    } else if(strlen(changeNum) == 0 && strlen(changeName) == 0) {
+        printf("기존의 사용자 번호 및 사용자 이름을 사용합니다");
+        EXEC SQL SELECT users.user_number, users.user_name INTO :c_user_number, :c_user_name FROM users, logdata WHERE users.user_number = logdata.current_login;
+        c_user_number.arr[c_user_number.len] = '\0';
+        c_user_name.arr[c_user_name.len] = '\0';
+    }
+
+    sprintf(dynstmt, "UPDATE users SET user_number = :c_user_number.arr, user_name = :c_user_name.arr WHERE user_number = :v_current_login.arr");
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt;
+    printf("사용자 정보가 성공적으로 수정되었습니다.\n");
+
+}
+
+void Delete_user_info()
+{
+/* --------------------------------------------------------------------------
+2.4 자신의 계정 삭제
+-------------------------------------------------------------------------- */
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar v_user_number[12];
+   varchar v_user_name[12];
+   varchar v_current_login[12];
+EXEC SQL END DECLARE SECTION;
+
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+   /* 실행시킬 SQL 문장*/
+   EXEC SQL SELECT users.user_number, users.user_name, logdata.current_login
+                    INTO :v_user_number, :v_user_name, :v_current_login
+                 FROM users, logdata
+                 WHERE users.user_number = logdata.current_login;
+
+   v_user_number.arr[v_user_number.len] = '\0';
+   v_user_name.arr[v_user_name.len] = '\0';
+   printf("현재 user_number = %s, 현재 user_name = %s \n", v_user_number.arr, v_user_name.arr);
+
+   EXEC SQL DELETE FROM users
+            WHERE user_number = :v_user_number AND user_name = :v_user_name;
+
+   EXEC SQL DELETE FROM logdata
+            WHERE current_login = :v_current_login;
+   
+   /*데이터 있는지 조건 추가하기 및 삭제 시 종료 추가?*/
+   printf("User information deleted successfully.\n");
+}
+
+void Search_book()
+{
+/* --------------------------------------------------------------------------
+2.5 도서검색
+-------------------------------------------------------------------------- */
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar v_book_number[12];
+   varchar v_book_title[37];
+   varchar v_book_author[12];
+   varchar v_book_publisher[12];
+   varchar v_book_code[12];
+
+   char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+   char inputBookNum[10];
+   char inputBookTitle[10];
+   char inputBookAuthor[10];
+   char inputBookPublisher[10];
+   char inputBookCode[10];
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+   printf("찾을 도서의 번호를 입력하세요 : ");
+   gets(inputBookNum);
+
+   printf("찾을 도서의 이름를 입력하세요 : ");
+   gets(inputBookTitle);
+
+   printf("찾을 도서의 저자를 입력하세요 : ");
+   gets(inputBookAuthor);
+
+   printf("찾을 도서의 출판사를 입력하세요 : ");
+   gets(inputBookPublisher);
+
+   printf("찾을 도서의 분류코드를 입력하세요 : ");
+   gets(inputBookCode);
+
+
+   /* 실행시킬 SQL 문장*/
+   sprintf(dynstmt, "SELECT book_number, book_title, book_author, book_publisher, book_code FROM books WHERE to_char(book_number) LIKE '%%%s%%' AND book_title LIKE '%%%s%%' AND book_author LIKE '%%%s%%' AND book_publisher LIKE '%%%s%%' AND to_char(book_code) LIKE '%%%s%%' ", inputBookNum, inputBookTitle, inputBookAuthor, inputBookPublisher, inputBookCode);
+   
+   printf("dynstmt : %s\n", dynstmt);
+
+   EXEC SQL PREPARE S FROM :dynstmt;
+   
+   /* 커서 선언 */   
+   EXEC SQL DECLARE c_cursor CURSOR FOR S ;
+  
+   /* 커서 오픈 */
+   EXEC SQL OPEN c_cursor;
+
+   EXEC SQL WHENEVER NOT FOUND DO break;
+   
+   printf("| 책번호   |        책이름        |   저자   |  출판사  | 분류코드 | \n");
+   
+    for (;;)
+    {
+        EXEC SQL FETCH c_cursor INTO :v_book_number, :v_book_title, :v_book_author, :v_book_publisher, :v_book_code;
+
+	v_book_number.arr[v_book_number.len] = '\0' ;
+	v_book_title.arr[v_book_title.len] = '\0' ;
+	v_book_author.arr[v_book_author.len] = '\0' ;
+	v_book_publisher.arr[v_book_publisher.len] = '\0' ;
+	v_book_code.arr[v_book_code.len] = '\0' ;
+
+	printf("| %-8s | %-20s | %-8s | %-8s | %-8s | \n", v_book_number.arr, v_book_title.arr, v_book_author.arr, v_book_publisher.arr, v_book_code.arr);
+    }
+   
+   EXEC SQL CLOSE c_cursor;
+
+}
+
+void Search_my_loan()
+{
+/* --------------------------------------------------------------------------
+2.9 자신의 대출 목록 조회
+-------------------------------------------------------------------------- */
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar v_book_number[12];
+   varchar v_book_loandate[20];
+   varchar v_book_duedate[20];
+
+   char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+   /* 실행시킬 SQL 문장*/
+   sprintf(dynstmt, "SELECT book_number, TO_CHAR(book_loandate, 'YY-MM-DD'), TO_CHAR(book_duedate, 'YY-MM-DD') FROM loan, logdata WHERE loan.user_number = logdata.current_login");
+   
+   printf("dynstmt : %s\n", dynstmt);
+
+   EXEC SQL PREPARE T FROM :dynstmt;
+   
+   /* 커서 선언 */   
+   EXEC SQL DECLARE t_cursor CURSOR FOR T;
+  
+   /* 커서 오픈 */
+   EXEC SQL OPEN t_cursor;
+
+   EXEC SQL WHENEVER NOT FOUND DO break;
+   
+   printf("------ 현재 나의 대출 목록 ------\n");
+   
+    for (;;)
+    {
+        EXEC SQL FETCH t_cursor INTO :v_book_number, :v_book_loandate, :v_book_duedate;
+
+
+             v_book_number.arr[v_book_number.len] = '\0';
+             v_book_loandate.arr[v_book_loandate.len] = '\0';
+             v_book_duedate.arr[v_book_duedate.len] = '\0';
+
+	printf("도서번호 : %s   | 대출일 : %s   | 반납일 : %s    |\n", v_book_number.arr, v_book_loandate.arr, v_book_duedate.arr);
+    }
+   
+   EXEC SQL CLOSE t_cursor;
+
+}
+
+/* --------------------------------------------------------------------------
+void sql_error(msg)
+
+   errrpt prints the ORACLE error msg and number.
+-------------------------------------------------------------------------- */
+void sql_error(char *msg)
+
+{
+    char err_msg[128];
+    size_t buf_len, msg_len;
+
+    EXEC SQL WHENEVER SQLERROR CONTINUE;
+
+    printf("\n%s\n", msg);
+    buf_len = sizeof (err_msg);
+    sqlglm(err_msg, &buf_len, &msg_len);
+    printf("%.*s\n", msg_len, err_msg);
+    getch();
+    
+    EXEC SQL ROLLBACK WORK;
+
+}
+
