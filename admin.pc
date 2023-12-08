@@ -1,0 +1,324 @@
+// win32 Visual C 컴파일시 추가
+// 프로그램 가장 첫 줄에 추가할 것
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <conio.h>
+
+/* for oracle */
+#include <sqlda.h>
+#include <sqlca.h>
+#include <sqlcpr.h>
+
+//#ifdef WIN32
+#include <windows.h>
+/*---------------  화면 커서 위치 제어 ----------------------*/
+void gotoxy(int x, int y) ;
+void getxy(int *x, int *y) ;
+void clrscr(void) ;
+/*-----------------------------------------------------------*/
+#define getch() _getch()
+
+void DB_connect();
+void add_book();
+void book_detail();
+void delete_book();
+void update_book();
+void update_status();
+void add_user();
+void search_user();
+void delete_user();
+void update_user();
+void manage_loan();
+
+void sql_error(char *msg) ;
+
+// win32 Visual C 컴파일시 추가
+#define getch() _getch()
+
+void main()
+{
+    DB_connect();
+    search_user();
+    getch();
+}
+void DB_connect()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+   VARCHAR uid[80];
+   VARCHAR pwd[20];
+EXEC SQL END DECLARE SECTION;
+
+   /* 본인 계정이름으로 바꾸어 쓸 것 */
+   strcpy((char *)uid.arr,"b20212954@//sedb.deu.ac.kr:1521/orcl");
+   uid.len = (short) strlen((char *)uid.arr);
+   /* 본인 계정 암호로 바꾸어 쓸 것 */
+   strcpy((char *)pwd.arr,"20212954");
+   pwd.len = (short) strlen((char *)pwd.arr);
+
+   EXEC SQL CONNECT :uid IDENTIFIED BY :pwd;
+
+	// connection이 실패했을경우의 처리부분
+
+	if (sqlca.sqlcode != 0 && sqlca.sqlcode != -1405){ 
+		printf("\7Connect error: %s", sqlca.sqlerrm.sqlerrmc);
+		getch();
+		exit(-1);
+	}
+
+    printf("Oracle Connect SUCCESS by %s\n", uid.arr);
+}
+
+void update_book()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+    char* num;
+    char* title;
+    char* author;
+    char* publisher;
+
+    num = "810001";
+    title = "한국문학(1권)";
+    author = "정현수";
+    publisher = "z출판사";
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+    /* 실행시킬 SQL 문장*/
+sprintf(dynstmt, "UPDATE books SET book_title = %s, book_author = %s, book_publisher = %s WHERE book_number = %s", title, author, publisher, num);
+
+    printf("stmt:%s\n", dynstmt);
+
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
+
+    EXEC SQL COMMIT WORK ;
+}
+
+void delete_book()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+    char* num;
+
+    num = "810001";
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+    /* 실행시킬 SQL 문장*/
+    sprintf(dynstmt, "DELETE FROM books WHERE book_number = %s", num);
+    printf("stmt:%s\n", dynstmt);
+
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
+
+    EXEC SQL COMMIT WORK ;
+}
+
+void add_book()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+    char* num;
+    char* title;
+    char* author;
+    char* publisher;
+    char* code;
+    char* loan_status;
+
+    num = "810001";
+    title = "한국문학(1권)";
+    author = "정현수";
+    publisher = "z출판사";
+    code = "800";
+    loan_status = "대출가능";
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+    sprintf(dynstmt, "INSERT INTO BOOKS VALUES ( '%s', '%s', '%s', '%s', '%s', '%s')", num, title, author, publisher, code, loan_status);
+
+    printf("stmt:%s\n", dynstmt);
+
+   /* 실행시킬 SQL 문장*/
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
+
+    EXEC SQL COMMIT WORK ;
+}
+
+void loan()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+    char* num;
+    char* loan_status;
+
+    num = "810001";
+    loan_status = "대출 중";
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+    /* 실행시킬 SQL 문장*/
+    sprintf(dynstmt, "UPDATE loan SET loan_status = '%s' WHERE book_number = '%s'", loan_status, num);
+
+    printf("stmt:%s\n", dynstmt);
+
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
+
+    EXEC SQL COMMIT WORK ;
+}
+
+void return_book()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    char dynstmt[1000];
+EXEC SQL END DECLARE SECTION;
+
+    char* num;
+    char* loan_status;
+
+    num = "810001";
+    loan_status = "대출가능";
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+    /* 실행시킬 SQL 문장*/
+sprintf(dynstmt, "UPDATE loan SET loan_status = '%s' WHERE book_number = '%s'", loan_status, num);
+
+    printf("stmt:%s\n", dynstmt);
+
+    EXEC SQL EXECUTE IMMEDIATE :dynstmt ;
+
+    EXEC SQL COMMIT WORK ;
+}
+
+void manage_loan() 
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    varchar v_user_num[12];
+    varchar v_book_num[12];
+    varchar v_loan_date[12];
+    varchar v_due_date[12];
+    varchar v_loan_status[8];
+EXEC SQL END DECLARE SECTION;
+
+
+    /* Register sql_error() as the error handler. */
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+
+    /* 실행시킬 SQL 문장*/
+    EXEC SQL SELECT book_number, user_number, TO_CHAR(book_loandate, 'YY/MM/DD'),  TO_CHAR(book_duedate, 'YY/MM/DD'), loan_status
+                     INTO :v_book_num, :v_user_num, :v_loan_date, :v_due_date, :v_loan_status
+                  FROM loan;
+
+/*
+    v_user_num.arr[v_user_num.len] = '\0';
+    v_book_num.arr[v_book_num.len] = '\0';
+    v_loan_date.arr[v_loan_date.len] = '\0';
+    v_due_date.arr[v_due_date.len] = '\0';
+    v_loan_status.arr[v_loan_status.len] = '\0';
+*/
+    printf("v_book_num= %s, v_user_num= %s, v_loan_date= %s, v_due_date= %s, v_loan_status= %s \n", v_book_num.arr, v_user_num.arr, v_loan_date.arr, v_due_date.arr, v_loan_status.arr);
+}
+
+void search_user()
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    char dynstmt[1000];
+    varchar v_user_num[10];
+    varchar v_user_name[10];
+    varchar v_loans[3];
+    varchar v_overdue[3];
+    varchar input[10];
+EXEC SQL END DECLARE SECTION;
+   strcpy((char *)input.arr,"4567");
+   input.len = (short) strlen((char *)input.arr);
+
+   /* Register sql_error() as the error handler. */
+   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+    /* 실행시킬 SQL 문장*/
+    EXEC SQL SELECT user_number, user_name, TO_CHAR(user_loans), TO_CHAR(user_overdue)
+                     INTO :v_user_num, :v_user_name, :v_loans, :v_overdue
+                  FROM users
+                  WHERE user_number = :input OR user_name = :input;
+
+    v_user_num.arr[v_user_num.len] = '\0';
+    v_user_name.arr[v_user_name.len] = '\0';
+    v_loans.arr[v_loans.len] = '\0';
+    v_overdue.arr[v_overdue.len] = '\0';
+
+    printf("v_user_num= %s, v_user_name= %s,v_loans = %s, v_overdue= %s \n", v_user_num.arr, v_user_name.arr,v_loans.arr, v_overdue.arr);
+}
+
+
+
+/* --------------------------------------------------------------------------
+void sql_error(msg)
+
+   errrpt prints the ORACLE error msg and number.
+-------------------------------------------------------------------------- */
+void sql_error(char *msg)
+
+{
+    char err_msg[128];
+    size_t buf_len, msg_len;
+
+    EXEC SQL WHENEVER SQLERROR CONTINUE;
+
+    printf("\n%s\n", msg);
+    buf_len = sizeof (err_msg);
+    sqlglm(err_msg, &buf_len, &msg_len);
+    printf("%.*s\n", msg_len, err_msg);
+    getch();
+    
+    EXEC SQL ROLLBACK WORK;
+
+}
+
+/*---------------  화면 커서 제어 함수 --------------------*/
+#define STD_HANDLE GetStdHandle(STD_OUTPUT_HANDLE)
+
+void gotoxy(int x, int y)
+{
+    COORD Cur= {(SHORT)x, (SHORT) y};
+
+    SetConsoleCursorPosition(STD_HANDLE, Cur);
+}
+
+void getxy(int *x, int *y)
+{
+    CONSOLE_SCREEN_BUFFER_INFO Buf ;
+
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Buf);
+    *x = (int)Buf.dwCursorPosition.X ;
+    *y = (int)Buf.dwCursorPosition.Y ;
+ 
+}
+
+void clrscr(void)
+{
+    COORD Cur= {0, 0};
+    unsigned long dwLen;
+
+    FillConsoleOutputCharacter(STD_HANDLE, ' ', 80*25, Cur, &dwLen);
+}
