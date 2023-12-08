@@ -34,9 +34,9 @@ void main()
 {
 	DB_connect();
 	//Get_user_info();
-             //Change_user_info();
+             Change_user_info();
              //Delete_user_info();
-             //EXEC SQL COMMIT WORK RELEASE ;
+             EXEC SQL COMMIT WORK RELEASE ;
              //Search_book();
              //Search_my_loan();
 	getch();
@@ -98,12 +98,12 @@ void Change_user_info()
 2.3 사용자 정보 수정. 현재 미입력시 안되는중
 ------------------------------------------------------*/
     EXEC SQL BEGIN DECLARE SECTION;
-        varchar v_user_number[12];
-        varchar v_user_name[12];
         varchar v_current_login[12];
-        varchar v_same_check[12];
         varchar c_user_number[12];
         varchar c_user_name[12];
+        varchar v_same_num[12];
+        varchar v_same_name[12];
+        int v_same_check;
 
         char dynstmt[1000];
     EXEC SQL END DECLARE SECTION;
@@ -114,27 +114,56 @@ void Change_user_info()
 
     printf("수정할 사용자 번호를 입력하세요 (미입력 시 기존값 사용) : ");
     gets(changeNum);
-    //strcpy(c_user_number.arr, changeNum);
-    //c_user_number.len = strlen(changeNum);
+
 
     printf("수정할 사용자 이름을 입력하세요 (미입력 시 기존값 사용) : ");
     gets(changeName);
-    //strcpy(c_user_name.arr, changeName);
-    //c_user_name.len = strlen(changeName);
 
-    printf("입력한 사용자 번호 길이 : %d, 입력한 사용자 이름 길이 : %d\n", strlen(changeNum),strlen(changeName));
+    printf("입력한 사용자 번호  : %s, 입력한 사용자 이름  : %s\n", changeNum, changeName);
 
     EXEC SQL SELECT current_login INTO :v_current_login
                   FROM logdata;
 
-    EXEC SQL SELECT user_number INTO :v_user_number
+    EXEC SQL SELECT COUNT(*), user_name, user_number INTO :v_same_check, :v_same_name, :v_same_num
                  FROM users
                  WHERE user_number = :v_current_login;
 
     v_current_login.arr[v_current_login.len] = '\0';
-    v_user_number.arr[v_user_number.len] = '\0';
     
+    if(v_same_check >= 1) {
+            if(strlen(changeNum) == 0) {
+            printf("기존의 사용자 번호를 사용합니다");
+            strcpy(c_user_name.arr, changeName);
+            c_user_name.len = strlen(changeName);
+            c_user_name.arr[c_user_name.len] = '\0';
+            EXEC SQL SELECT users.user_number INTO :c_user_number FROM users, logdata WHERE users.user_number = logdata.current_login;
+            c_user_number.arr[c_user_number.len] = '\0';
+        }
+        else if(strlen(changeName) == 0) {
+            strcpy(c_user_number.arr, changeNum);
+            c_user_number.len = strlen(changeNum);
+            c_user_number.arr[c_user_number.len] = '\0';
+            EXEC SQL SELECT users.user_number, users.user_name INTO :v_same_check, :c_user_name FROM users, logdata WHERE users.user_number = logdata.current_login;
 
+        if(c_user_number.arr == v_same_num.arr) {
+                printf("이미 존재하는 사용자 번호입니다. 다른 번호를 입력하세요.\n");
+                return;
+            } else {
+                  printf("기존의 사용자 이름을 사용합니다");
+                  c_user_name.arr[c_user_name.len] = '\0';
+            }
+        }
+        else if(strlen(changeNum) == 0 && strlen(changeName) == 0) {
+            printf("기존의 사용자 번호 및 사용자 이름을 사용합니다");
+            EXEC SQL SELECT users.user_number, users.user_name INTO :c_user_number, :c_user_name FROM users, logdata WHERE users.user_number = logdata.current_login;
+            c_user_number.arr[c_user_number.len] = '\0';
+            c_user_name.arr[c_user_name.len] = '\0';
+        }
+
+        sprintf(dynstmt, "UPDATE users SET user_number = :c_user_number.arr, user_name = :c_user_name.arr WHERE user_number = :v_current_login.arr");
+        EXEC SQL EXECUTE IMMEDIATE :dynstmt;
+        printf("사용자 정보가 성공적으로 수정되었습니다.\n");
+    }
 
     // 중복된 사용자 번호가 있는지 확인
     // 커서를 사용해서 계속 돌면서 입력값이랑 비교?
@@ -149,38 +178,7 @@ void Change_user_info()
      ORA-01008: 일부 변수가 바인드되지 않았습니다.
     ---------------------------------------------------------------*/
 
-    if(strlen(changeNum) == 0) {
-        printf("기존의 사용자 번호를 사용합니다");
-        strcpy(c_user_name.arr, changeName);
-        c_user_name.len = strlen(changeName);
-        c_user_name.arr[c_user_name.len] = '\0';
-        EXEC SQL SELECT users.user_number INTO :c_user_number FROM users, logdata WHERE users.user_number = logdata.current_login;
-        c_user_number.arr[c_user_number.len] = '\0';
-    } else if(strlen(changeName) == 0) {
-        strcpy(c_user_number.arr, changeNum);
-        c_user_number.len = strlen(changeNum);
-        c_user_number.arr[c_user_number.len] = '\0';
-        EXEC SQL SELECT users.user_number, users.user_name INTO :v_same_check, :c_user_name FROM users, logdata WHERE users.user_number = logdata.current_login;
-        v_same_check.arr[v_same_check.len] = '\0';
-
-        if(c_user_number.arr == v_same_check.arr) {
-            printf("이미 존재하는 사용자 번호입니다. 다른 번호를 입력하세요.\n");
-            return;
-        } else {
-              printf("기존의 사용자 이름을 사용합니다");
-              c_user_name.arr[c_user_name.len] = '\0';
-        }
-
-    } else if(strlen(changeNum) == 0 && strlen(changeName) == 0) {
-        printf("기존의 사용자 번호 및 사용자 이름을 사용합니다");
-        EXEC SQL SELECT users.user_number, users.user_name INTO :c_user_number, :c_user_name FROM users, logdata WHERE users.user_number = logdata.current_login;
-        c_user_number.arr[c_user_number.len] = '\0';
-        c_user_name.arr[c_user_name.len] = '\0';
-    }
-
-    sprintf(dynstmt, "UPDATE users SET user_number = :c_user_number.arr, user_name = :c_user_name.arr WHERE user_number = :v_current_login.arr");
-    EXEC SQL EXECUTE IMMEDIATE :dynstmt;
-    printf("사용자 정보가 성공적으로 수정되었습니다.\n");
+    
 
 }
 
@@ -293,49 +291,6 @@ EXEC SQL END DECLARE SECTION;
    EXEC SQL CLOSE c_cursor;
 
 }
-
-void Add_book_loan() 
-{
-/*-----------------------------------------------------------------------------------
-2.6 도서 대출
--------------------------------------------------------------------------------------*/
-
-EXEC SQL BEGIN DECLARE SECTION;
-   varchar v_user_number[12];
-
-   char dynstmt[1000];
-EXEC SQL END DECLARE SECTION;
-
-
-   /* Register sql_error() as the error handler. */
-   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
-
-   /* loan테이블에 넣을 user_number를 현재 로그인 중인 user_number의 값을 가져와서 삽입 */
-   EXEC SQL SELECT users.user_number
-                    INTO :insert_user_number
-                 FROM users, logdata
-                 WHERE users.user_number = logdata.current_login;
-   /* 선택할 행의 책에 대한 정보를 가져온다. */
-   EXEC SELECT book_number, book_title, book_publisher INTO :insert_book_number
-          FROM ( SELECT book_number, book_title, book_publisher, ROWNUM AS row_num FROM books)
-          WHERE row_num = "입력된 행의 번호";
-
-   /* 아래 문장에서 나온 상태가 '대출가능' 일 때만 대출 진행*/
-   EXEC SELECT book_loan_status INTO :check_loan_status FROM books WHERE book_number = insert_book_number;
-
-   /*아래 두 문장은 대출 가능 상태 확인 후 실행*/
-   EXEC SQL INSERT INTO loan (book_number, user_number, loan_status)
-                VALUES (insert_book_number, insert_user_number, '대출중');
-
-   EXEC UPDATE books SET book_loan_status = '대출불가' WHERE  book_number = v_book_number;
-
-
-
-
-}
-
-
-
 
 void Search_my_loan()
 {

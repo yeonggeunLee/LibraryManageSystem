@@ -135,25 +135,27 @@ typedef struct { unsigned short len; unsigned char arr[1]; } varchar;
 /* cud (compilation unit data) array */
 static const short sqlcud0[] =
 {13,4130,1,0,0,
-5,0,0,0,0,0,27,53,0,0,4,4,0,1,0,1,9,0,0,1,9,0,0,1,10,0,0,1,10,0,0,
-36,0,0,2,167,0,4,84,0,0,4,0,0,1,0,2,9,0,0,2,9,0,0,2,3,0,0,2,3,0,0,
-67,0,0,3,44,0,4,127,0,0,1,0,0,1,0,2,9,0,0,
-86,0,0,4,100,0,4,150,0,0,1,0,0,1,0,2,9,0,0,
-105,0,0,5,121,0,4,156,0,0,2,0,0,1,0,2,9,0,0,2,9,0,0,
-128,0,0,6,121,0,4,169,0,0,2,0,0,1,0,2,9,0,0,2,9,0,0,
-151,0,0,7,0,0,24,175,0,0,1,1,0,1,0,1,97,0,0,
-170,0,0,8,148,0,4,197,0,0,3,0,0,1,0,2,9,0,0,2,9,0,0,2,9,0,0,
-197,0,0,9,61,0,2,206,0,0,2,2,0,1,0,1,9,0,0,1,9,0,0,
-220,0,0,10,45,0,2,209,0,0,1,1,0,1,0,1,9,0,0,
-239,0,0,11,0,0,17,261,0,0,1,1,0,1,0,1,97,0,0,
-258,0,0,11,0,0,45,267,0,0,0,0,0,1,0,
-273,0,0,11,0,0,13,275,0,0,5,0,0,1,0,2,9,0,0,2,9,0,0,2,9,0,0,2,9,0,0,2,9,0,0,
-308,0,0,11,0,0,15,286,0,0,0,0,0,1,0,
-323,0,0,12,0,0,17,340,0,0,1,1,0,1,0,1,97,0,0,
-342,0,0,12,0,0,45,346,0,0,0,0,0,1,0,
-357,0,0,12,0,0,13,354,0,0,3,0,0,1,0,2,9,0,0,2,9,0,0,2,9,0,0,
-384,0,0,12,0,0,15,364,0,0,0,0,0,1,0,
-399,0,0,13,0,0,31,387,0,0,0,0,0,1,0,
+5,0,0,1,0,0,30,39,0,0,0,0,0,1,0,
+20,0,0,0,0,0,27,53,0,0,4,4,0,1,0,1,9,0,0,1,9,0,0,1,10,0,0,1,10,0,0,
+51,0,0,3,167,0,4,84,0,0,4,0,0,1,0,2,9,0,0,2,9,0,0,2,3,0,0,2,3,0,0,
+82,0,0,4,44,0,4,124,0,0,1,0,0,1,0,2,9,0,0,
+101,0,0,5,91,0,4,127,0,0,4,1,0,1,0,2,3,0,0,2,9,0,0,2,9,0,0,1,9,0,0,
+132,0,0,6,100,0,4,139,0,0,1,0,0,1,0,2,9,0,0,
+151,0,0,7,121,0,4,146,0,0,2,0,0,1,0,2,3,0,0,2,9,0,0,
+174,0,0,8,121,0,4,158,0,0,2,0,0,1,0,2,9,0,0,2,9,0,0,
+197,0,0,9,0,0,24,164,0,0,1,1,0,1,0,1,97,0,0,
+216,0,0,10,148,0,4,202,0,0,3,0,0,1,0,2,9,0,0,2,9,0,0,2,9,0,0,
+243,0,0,11,61,0,2,211,0,0,2,2,0,1,0,1,9,0,0,1,9,0,0,
+266,0,0,12,45,0,2,214,0,0,1,1,0,1,0,1,9,0,0,
+285,0,0,13,0,0,17,266,0,0,1,1,0,1,0,1,97,0,0,
+304,0,0,13,0,0,45,272,0,0,0,0,0,1,0,
+319,0,0,13,0,0,13,280,0,0,5,0,0,1,0,2,9,0,0,2,9,0,0,2,9,0,0,2,9,0,0,2,9,0,0,
+354,0,0,13,0,0,15,291,0,0,0,0,0,1,0,
+369,0,0,14,0,0,17,317,0,0,1,1,0,1,0,1,97,0,0,
+388,0,0,14,0,0,45,323,0,0,0,0,0,1,0,
+403,0,0,14,0,0,13,331,0,0,3,0,0,1,0,2,9,0,0,2,9,0,0,2,9,0,0,
+430,0,0,14,0,0,15,341,0,0,0,0,0,1,0,
+445,0,0,15,0,0,31,364,0,0,0,0,0,1,0,
 };
 
 
@@ -198,10 +200,27 @@ struct { unsigned short len; unsigned char arr[20]; } pwd;
 void main()
 {
 	DB_connect();
-	Get_user_info();
-             //Change_user_info();
+	//Get_user_info();
+             Change_user_info();
              //Delete_user_info();
-             //EXEC SQL COMMIT WORK RELEASE ;
+             /* EXEC SQL COMMIT WORK RELEASE ; */ 
+
+{
+             struct sqlexd sqlstm;
+             sqlstm.sqlvsn = 13;
+             sqlstm.arrsiz = 0;
+             sqlstm.sqladtp = &sqladt;
+             sqlstm.sqltdsp = &sqltds;
+             sqlstm.iters = (unsigned int  )1;
+             sqlstm.offset = (unsigned int  )5;
+             sqlstm.cud = sqlcud0;
+             sqlstm.sqlest = (unsigned char  *)&sqlca;
+             sqlstm.sqlety = (unsigned short)4352;
+             sqlstm.occurs = (unsigned int  )0;
+             sqlcxt((void **)0, &sqlctx, &sqlstm, &sqlfpn);
+}
+
+
              //Search_book();
              //Search_my_loan();
 	getch();
@@ -224,7 +243,7 @@ void DB_connect()
    sqlstm.sqladtp = &sqladt;
    sqlstm.sqltdsp = &sqltds;
    sqlstm.iters = (unsigned int  )10;
-   sqlstm.offset = (unsigned int  )5;
+   sqlstm.offset = (unsigned int  )20;
    sqlstm.cud = sqlcud0;
    sqlstm.sqlest = (unsigned char  *)&sqlca;
    sqlstm.sqlety = (unsigned short)4352;
@@ -315,7 +334,7 @@ struct { unsigned short len; unsigned char arr[12]; } v_user_name;
 s ,users.user_overdue into :b0,:b1,:b2,:b3  from users ,logdata where users.us\
 er_number=logdata.current_login";
    sqlstm.iters = (unsigned int  )1;
-   sqlstm.offset = (unsigned int  )36;
+   sqlstm.offset = (unsigned int  )51;
    sqlstm.selerr = (unsigned short)1;
    sqlstm.sqlpfmem = (unsigned int  )0;
    sqlstm.cud = sqlcud0;
@@ -382,17 +401,8 @@ void Change_user_info()
 ------------------------------------------------------*/
     /* EXEC SQL BEGIN DECLARE SECTION; */ 
 
-        /* varchar v_user_number[12]; */ 
-struct { unsigned short len; unsigned char arr[12]; } v_user_number;
-
-        /* varchar v_user_name[12]; */ 
-struct { unsigned short len; unsigned char arr[12]; } v_user_name;
-
         /* varchar v_current_login[12]; */ 
 struct { unsigned short len; unsigned char arr[12]; } v_current_login;
-
-        /* varchar v_same_check[12]; */ 
-struct { unsigned short len; unsigned char arr[12]; } v_same_check;
 
         /* varchar c_user_number[12]; */ 
 struct { unsigned short len; unsigned char arr[12]; } c_user_number;
@@ -400,6 +410,13 @@ struct { unsigned short len; unsigned char arr[12]; } c_user_number;
         /* varchar c_user_name[12]; */ 
 struct { unsigned short len; unsigned char arr[12]; } c_user_name;
 
+        /* varchar v_same_num[12]; */ 
+struct { unsigned short len; unsigned char arr[12]; } v_same_num;
+
+        /* varchar v_same_name[12]; */ 
+struct { unsigned short len; unsigned char arr[12]; } v_same_name;
+
+        int v_same_check;
 
         char dynstmt[1000];
     /* EXEC SQL END DECLARE SECTION; */ 
@@ -411,15 +428,12 @@ struct { unsigned short len; unsigned char arr[12]; } c_user_name;
 
     printf("수정할 사용자 번호를 입력하세요 (미입력 시 기존값 사용) : ");
     gets(changeNum);
-    //strcpy(c_user_number.arr, changeNum);
-    //c_user_number.len = strlen(changeNum);
+
 
     printf("수정할 사용자 이름을 입력하세요 (미입력 시 기존값 사용) : ");
     gets(changeName);
-    //strcpy(c_user_name.arr, changeName);
-    //c_user_name.len = strlen(changeName);
 
-    printf("입력한 사용자 번호 길이 : %d, 입력한 사용자 이름 길이 : %d\n", strlen(changeNum),strlen(changeName));
+    printf("입력한 사용자 번호  : %s, 입력한 사용자 이름  : %s\n", changeNum, changeName);
 
     /* EXEC SQL SELECT current_login INTO :v_current_login
                   FROM logdata; */ 
@@ -432,7 +446,7 @@ struct { unsigned short len; unsigned char arr[12]; } c_user_name;
     sqlstm.sqltdsp = &sqltds;
     sqlstm.stmt = "select current_login into :b0  from logdata ";
     sqlstm.iters = (unsigned int  )1;
-    sqlstm.offset = (unsigned int  )67;
+    sqlstm.offset = (unsigned int  )82;
     sqlstm.selerr = (unsigned short)1;
     sqlstm.sqlpfmem = (unsigned int  )0;
     sqlstm.cud = sqlcud0;
@@ -461,186 +475,10 @@ struct { unsigned short len; unsigned char arr[12]; } c_user_name;
 }
 
 
-    
-    v_current_login.arr[v_current_login.len] = '\0';
 
-    // 중복된 사용자 번호가 있는지 확인
-    // 커서를 사용해서 계속 돌면서 입력값이랑 비교?
-
-    /*--------------------------------------------------------------
-      계속해서 아래와 같이 나오는중
-     수정할 사용자 번호를 입력하세요 (미입력 시 기존값 사용) :
-     수정할 사용자 이름을 입력하세요 (미입력 시 기존값 사용) :
-     입력한 사용자 번호 길이 : 0, 입력한 사용자 이름 길이 : 0
-     기존의 사용자 번호를 사용합니다
-     ORACLE ERROR:
-     ORA-01008: 일부 변수가 바인드되지 않았습니다.
-    ---------------------------------------------------------------*/
-
-    if(strlen(changeNum) == 0) {
-        printf("기존의 사용자 번호를 사용합니다");
-        strcpy(c_user_name.arr, changeName);
-        c_user_name.len = strlen(changeName);
-        c_user_name.arr[c_user_name.len] = '\0';
-        /* EXEC SQL SELECT users.user_number INTO :c_user_number FROM users, logdata WHERE users.user_number = logdata.current_login; */ 
-
-{
-        struct sqlexd sqlstm;
-        sqlstm.sqlvsn = 13;
-        sqlstm.arrsiz = 4;
-        sqlstm.sqladtp = &sqladt;
-        sqlstm.sqltdsp = &sqltds;
-        sqlstm.stmt = "select users.user_number into :b0  from users ,logdat\
-a where users.user_number=logdata.current_login";
-        sqlstm.iters = (unsigned int  )1;
-        sqlstm.offset = (unsigned int  )86;
-        sqlstm.selerr = (unsigned short)1;
-        sqlstm.sqlpfmem = (unsigned int  )0;
-        sqlstm.cud = sqlcud0;
-        sqlstm.sqlest = (unsigned char  *)&sqlca;
-        sqlstm.sqlety = (unsigned short)4352;
-        sqlstm.occurs = (unsigned int  )0;
-        sqlstm.sqhstv[0] = (         void  *)&c_user_number;
-        sqlstm.sqhstl[0] = (unsigned int  )14;
-        sqlstm.sqhsts[0] = (         int  )0;
-        sqlstm.sqindv[0] = (         void  *)0;
-        sqlstm.sqinds[0] = (         int  )0;
-        sqlstm.sqharm[0] = (unsigned int  )0;
-        sqlstm.sqadto[0] = (unsigned short )0;
-        sqlstm.sqtdso[0] = (unsigned short )0;
-        sqlstm.sqphsv = sqlstm.sqhstv;
-        sqlstm.sqphsl = sqlstm.sqhstl;
-        sqlstm.sqphss = sqlstm.sqhsts;
-        sqlstm.sqpind = sqlstm.sqindv;
-        sqlstm.sqpins = sqlstm.sqinds;
-        sqlstm.sqparm = sqlstm.sqharm;
-        sqlstm.sqparc = sqlstm.sqharc;
-        sqlstm.sqpadto = sqlstm.sqadto;
-        sqlstm.sqptdso = sqlstm.sqtdso;
-        sqlcxt((void **)0, &sqlctx, &sqlstm, &sqlfpn);
-        if (sqlca.sqlcode < 0) sql_error("\7ORACLE ERROR:\n");
-}
-
-
-        c_user_number.arr[c_user_number.len] = '\0';
-    } else if(strlen(changeName) == 0) {
-        strcpy(c_user_number.arr, changeNum);
-        c_user_number.len = strlen(changeNum);
-        c_user_number.arr[c_user_number.len] = '\0';
-        /* EXEC SQL SELECT users.user_number, users.user_name INTO :v_same_check, :c_user_name FROM users, logdata WHERE users.user_number = logdata.current_login; */ 
-
-{
-        struct sqlexd sqlstm;
-        sqlstm.sqlvsn = 13;
-        sqlstm.arrsiz = 4;
-        sqlstm.sqladtp = &sqladt;
-        sqlstm.sqltdsp = &sqltds;
-        sqlstm.stmt = "select users.user_number ,users.user_name into :b0,:b\
-1  from users ,logdata where users.user_number=logdata.current_login";
-        sqlstm.iters = (unsigned int  )1;
-        sqlstm.offset = (unsigned int  )105;
-        sqlstm.selerr = (unsigned short)1;
-        sqlstm.sqlpfmem = (unsigned int  )0;
-        sqlstm.cud = sqlcud0;
-        sqlstm.sqlest = (unsigned char  *)&sqlca;
-        sqlstm.sqlety = (unsigned short)4352;
-        sqlstm.occurs = (unsigned int  )0;
-        sqlstm.sqhstv[0] = (         void  *)&v_same_check;
-        sqlstm.sqhstl[0] = (unsigned int  )14;
-        sqlstm.sqhsts[0] = (         int  )0;
-        sqlstm.sqindv[0] = (         void  *)0;
-        sqlstm.sqinds[0] = (         int  )0;
-        sqlstm.sqharm[0] = (unsigned int  )0;
-        sqlstm.sqadto[0] = (unsigned short )0;
-        sqlstm.sqtdso[0] = (unsigned short )0;
-        sqlstm.sqhstv[1] = (         void  *)&c_user_name;
-        sqlstm.sqhstl[1] = (unsigned int  )14;
-        sqlstm.sqhsts[1] = (         int  )0;
-        sqlstm.sqindv[1] = (         void  *)0;
-        sqlstm.sqinds[1] = (         int  )0;
-        sqlstm.sqharm[1] = (unsigned int  )0;
-        sqlstm.sqadto[1] = (unsigned short )0;
-        sqlstm.sqtdso[1] = (unsigned short )0;
-        sqlstm.sqphsv = sqlstm.sqhstv;
-        sqlstm.sqphsl = sqlstm.sqhstl;
-        sqlstm.sqphss = sqlstm.sqhsts;
-        sqlstm.sqpind = sqlstm.sqindv;
-        sqlstm.sqpins = sqlstm.sqinds;
-        sqlstm.sqparm = sqlstm.sqharm;
-        sqlstm.sqparc = sqlstm.sqharc;
-        sqlstm.sqpadto = sqlstm.sqadto;
-        sqlstm.sqptdso = sqlstm.sqtdso;
-        sqlcxt((void **)0, &sqlctx, &sqlstm, &sqlfpn);
-        if (sqlca.sqlcode < 0) sql_error("\7ORACLE ERROR:\n");
-}
-
-
-        v_same_check.arr[v_same_check.len] = '\0';
-
-        if(c_user_number.arr == v_same_check.arr) {
-            printf("이미 존재하는 사용자 번호입니다. 다른 번호를 입력하세요.\n");
-            return;
-        } else {
-              printf("기존의 사용자 이름을 사용합니다");
-              c_user_name.arr[c_user_name.len] = '\0';
-        }
-
-    } else if(strlen(changeNum) == 0 && strlen(changeName) == 0) {
-        printf("기존의 사용자 번호 및 사용자 이름을 사용합니다");
-        /* EXEC SQL SELECT users.user_number, users.user_name INTO :c_user_number, :c_user_name FROM users, logdata WHERE users.user_number = logdata.current_login; */ 
-
-{
-        struct sqlexd sqlstm;
-        sqlstm.sqlvsn = 13;
-        sqlstm.arrsiz = 4;
-        sqlstm.sqladtp = &sqladt;
-        sqlstm.sqltdsp = &sqltds;
-        sqlstm.stmt = "select users.user_number ,users.user_name into :b0,:b\
-1  from users ,logdata where users.user_number=logdata.current_login";
-        sqlstm.iters = (unsigned int  )1;
-        sqlstm.offset = (unsigned int  )128;
-        sqlstm.selerr = (unsigned short)1;
-        sqlstm.sqlpfmem = (unsigned int  )0;
-        sqlstm.cud = sqlcud0;
-        sqlstm.sqlest = (unsigned char  *)&sqlca;
-        sqlstm.sqlety = (unsigned short)4352;
-        sqlstm.occurs = (unsigned int  )0;
-        sqlstm.sqhstv[0] = (         void  *)&c_user_number;
-        sqlstm.sqhstl[0] = (unsigned int  )14;
-        sqlstm.sqhsts[0] = (         int  )0;
-        sqlstm.sqindv[0] = (         void  *)0;
-        sqlstm.sqinds[0] = (         int  )0;
-        sqlstm.sqharm[0] = (unsigned int  )0;
-        sqlstm.sqadto[0] = (unsigned short )0;
-        sqlstm.sqtdso[0] = (unsigned short )0;
-        sqlstm.sqhstv[1] = (         void  *)&c_user_name;
-        sqlstm.sqhstl[1] = (unsigned int  )14;
-        sqlstm.sqhsts[1] = (         int  )0;
-        sqlstm.sqindv[1] = (         void  *)0;
-        sqlstm.sqinds[1] = (         int  )0;
-        sqlstm.sqharm[1] = (unsigned int  )0;
-        sqlstm.sqadto[1] = (unsigned short )0;
-        sqlstm.sqtdso[1] = (unsigned short )0;
-        sqlstm.sqphsv = sqlstm.sqhstv;
-        sqlstm.sqphsl = sqlstm.sqhstl;
-        sqlstm.sqphss = sqlstm.sqhsts;
-        sqlstm.sqpind = sqlstm.sqindv;
-        sqlstm.sqpins = sqlstm.sqinds;
-        sqlstm.sqparm = sqlstm.sqharm;
-        sqlstm.sqparc = sqlstm.sqharc;
-        sqlstm.sqpadto = sqlstm.sqadto;
-        sqlstm.sqptdso = sqlstm.sqtdso;
-        sqlcxt((void **)0, &sqlctx, &sqlstm, &sqlfpn);
-        if (sqlca.sqlcode < 0) sql_error("\7ORACLE ERROR:\n");
-}
-
-
-        c_user_number.arr[c_user_number.len] = '\0';
-        c_user_name.arr[c_user_name.len] = '\0';
-    }
-
-    sprintf(dynstmt, "UPDATE users SET user_number = :c_user_number.arr, user_name = :c_user_name.arr WHERE user_number = :v_current_login.arr");
-    /* EXEC SQL EXECUTE IMMEDIATE :dynstmt; */ 
+    /* EXEC SQL SELECT COUNT(*), user_name, user_number INTO :v_same_check, :v_same_name, :v_same_num
+                 FROM users
+                 WHERE user_number = :v_current_login; */ 
 
 {
     struct sqlexd sqlstm;
@@ -648,21 +486,48 @@ a where users.user_number=logdata.current_login";
     sqlstm.arrsiz = 4;
     sqlstm.sqladtp = &sqladt;
     sqlstm.sqltdsp = &sqltds;
-    sqlstm.stmt = "";
+    sqlstm.stmt = "select count(*)  ,user_name ,user_number into :b0,:b1,:b2\
+  from users where user_number=:b3";
     sqlstm.iters = (unsigned int  )1;
-    sqlstm.offset = (unsigned int  )151;
+    sqlstm.offset = (unsigned int  )101;
+    sqlstm.selerr = (unsigned short)1;
+    sqlstm.sqlpfmem = (unsigned int  )0;
     sqlstm.cud = sqlcud0;
     sqlstm.sqlest = (unsigned char  *)&sqlca;
     sqlstm.sqlety = (unsigned short)4352;
     sqlstm.occurs = (unsigned int  )0;
-    sqlstm.sqhstv[0] = (         void  *)dynstmt;
-    sqlstm.sqhstl[0] = (unsigned int  )1000;
+    sqlstm.sqhstv[0] = (         void  *)&v_same_check;
+    sqlstm.sqhstl[0] = (unsigned int  )sizeof(int);
     sqlstm.sqhsts[0] = (         int  )0;
     sqlstm.sqindv[0] = (         void  *)0;
     sqlstm.sqinds[0] = (         int  )0;
     sqlstm.sqharm[0] = (unsigned int  )0;
     sqlstm.sqadto[0] = (unsigned short )0;
     sqlstm.sqtdso[0] = (unsigned short )0;
+    sqlstm.sqhstv[1] = (         void  *)&v_same_name;
+    sqlstm.sqhstl[1] = (unsigned int  )14;
+    sqlstm.sqhsts[1] = (         int  )0;
+    sqlstm.sqindv[1] = (         void  *)0;
+    sqlstm.sqinds[1] = (         int  )0;
+    sqlstm.sqharm[1] = (unsigned int  )0;
+    sqlstm.sqadto[1] = (unsigned short )0;
+    sqlstm.sqtdso[1] = (unsigned short )0;
+    sqlstm.sqhstv[2] = (         void  *)&v_same_num;
+    sqlstm.sqhstl[2] = (unsigned int  )14;
+    sqlstm.sqhsts[2] = (         int  )0;
+    sqlstm.sqindv[2] = (         void  *)0;
+    sqlstm.sqinds[2] = (         int  )0;
+    sqlstm.sqharm[2] = (unsigned int  )0;
+    sqlstm.sqadto[2] = (unsigned short )0;
+    sqlstm.sqtdso[2] = (unsigned short )0;
+    sqlstm.sqhstv[3] = (         void  *)&v_current_login;
+    sqlstm.sqhstl[3] = (unsigned int  )14;
+    sqlstm.sqhsts[3] = (         int  )0;
+    sqlstm.sqindv[3] = (         void  *)0;
+    sqlstm.sqinds[3] = (         int  )0;
+    sqlstm.sqharm[3] = (unsigned int  )0;
+    sqlstm.sqadto[3] = (unsigned short )0;
+    sqlstm.sqtdso[3] = (unsigned short )0;
     sqlstm.sqphsv = sqlstm.sqhstv;
     sqlstm.sqphsl = sqlstm.sqhstl;
     sqlstm.sqphss = sqlstm.sqhsts;
@@ -677,7 +542,227 @@ a where users.user_number=logdata.current_login";
 }
 
 
-    printf("사용자 정보가 성공적으로 수정되었습니다.\n");
+
+    v_current_login.arr[v_current_login.len] = '\0';
+    
+    if(v_same_check >= 1) {
+            if(strlen(changeNum) == 0) {
+            printf("기존의 사용자 번호를 사용합니다");
+            strcpy(c_user_name.arr, changeName);
+            c_user_name.len = strlen(changeName);
+            c_user_name.arr[c_user_name.len] = '\0';
+            /* EXEC SQL SELECT users.user_number INTO :c_user_number FROM users, logdata WHERE users.user_number = logdata.current_login; */ 
+
+{
+            struct sqlexd sqlstm;
+            sqlstm.sqlvsn = 13;
+            sqlstm.arrsiz = 4;
+            sqlstm.sqladtp = &sqladt;
+            sqlstm.sqltdsp = &sqltds;
+            sqlstm.stmt = "select users.user_number into :b0  from users ,lo\
+gdata where users.user_number=logdata.current_login";
+            sqlstm.iters = (unsigned int  )1;
+            sqlstm.offset = (unsigned int  )132;
+            sqlstm.selerr = (unsigned short)1;
+            sqlstm.sqlpfmem = (unsigned int  )0;
+            sqlstm.cud = sqlcud0;
+            sqlstm.sqlest = (unsigned char  *)&sqlca;
+            sqlstm.sqlety = (unsigned short)4352;
+            sqlstm.occurs = (unsigned int  )0;
+            sqlstm.sqhstv[0] = (         void  *)&c_user_number;
+            sqlstm.sqhstl[0] = (unsigned int  )14;
+            sqlstm.sqhsts[0] = (         int  )0;
+            sqlstm.sqindv[0] = (         void  *)0;
+            sqlstm.sqinds[0] = (         int  )0;
+            sqlstm.sqharm[0] = (unsigned int  )0;
+            sqlstm.sqadto[0] = (unsigned short )0;
+            sqlstm.sqtdso[0] = (unsigned short )0;
+            sqlstm.sqphsv = sqlstm.sqhstv;
+            sqlstm.sqphsl = sqlstm.sqhstl;
+            sqlstm.sqphss = sqlstm.sqhsts;
+            sqlstm.sqpind = sqlstm.sqindv;
+            sqlstm.sqpins = sqlstm.sqinds;
+            sqlstm.sqparm = sqlstm.sqharm;
+            sqlstm.sqparc = sqlstm.sqharc;
+            sqlstm.sqpadto = sqlstm.sqadto;
+            sqlstm.sqptdso = sqlstm.sqtdso;
+            sqlcxt((void **)0, &sqlctx, &sqlstm, &sqlfpn);
+            if (sqlca.sqlcode < 0) sql_error("\7ORACLE ERROR:\n");
+}
+
+
+            c_user_number.arr[c_user_number.len] = '\0';
+        }
+        else if(strlen(changeName) == 0) {
+            strcpy(c_user_number.arr, changeNum);
+            c_user_number.len = strlen(changeNum);
+            c_user_number.arr[c_user_number.len] = '\0';
+            /* EXEC SQL SELECT users.user_number, users.user_name INTO :v_same_check, :c_user_name FROM users, logdata WHERE users.user_number = logdata.current_login; */ 
+
+{
+            struct sqlexd sqlstm;
+            sqlstm.sqlvsn = 13;
+            sqlstm.arrsiz = 4;
+            sqlstm.sqladtp = &sqladt;
+            sqlstm.sqltdsp = &sqltds;
+            sqlstm.stmt = "select users.user_number ,users.user_name into :b\
+0,:b1  from users ,logdata where users.user_number=logdata.current_login";
+            sqlstm.iters = (unsigned int  )1;
+            sqlstm.offset = (unsigned int  )151;
+            sqlstm.selerr = (unsigned short)1;
+            sqlstm.sqlpfmem = (unsigned int  )0;
+            sqlstm.cud = sqlcud0;
+            sqlstm.sqlest = (unsigned char  *)&sqlca;
+            sqlstm.sqlety = (unsigned short)4352;
+            sqlstm.occurs = (unsigned int  )0;
+            sqlstm.sqhstv[0] = (         void  *)&v_same_check;
+            sqlstm.sqhstl[0] = (unsigned int  )sizeof(int);
+            sqlstm.sqhsts[0] = (         int  )0;
+            sqlstm.sqindv[0] = (         void  *)0;
+            sqlstm.sqinds[0] = (         int  )0;
+            sqlstm.sqharm[0] = (unsigned int  )0;
+            sqlstm.sqadto[0] = (unsigned short )0;
+            sqlstm.sqtdso[0] = (unsigned short )0;
+            sqlstm.sqhstv[1] = (         void  *)&c_user_name;
+            sqlstm.sqhstl[1] = (unsigned int  )14;
+            sqlstm.sqhsts[1] = (         int  )0;
+            sqlstm.sqindv[1] = (         void  *)0;
+            sqlstm.sqinds[1] = (         int  )0;
+            sqlstm.sqharm[1] = (unsigned int  )0;
+            sqlstm.sqadto[1] = (unsigned short )0;
+            sqlstm.sqtdso[1] = (unsigned short )0;
+            sqlstm.sqphsv = sqlstm.sqhstv;
+            sqlstm.sqphsl = sqlstm.sqhstl;
+            sqlstm.sqphss = sqlstm.sqhsts;
+            sqlstm.sqpind = sqlstm.sqindv;
+            sqlstm.sqpins = sqlstm.sqinds;
+            sqlstm.sqparm = sqlstm.sqharm;
+            sqlstm.sqparc = sqlstm.sqharc;
+            sqlstm.sqpadto = sqlstm.sqadto;
+            sqlstm.sqptdso = sqlstm.sqtdso;
+            sqlcxt((void **)0, &sqlctx, &sqlstm, &sqlfpn);
+            if (sqlca.sqlcode < 0) sql_error("\7ORACLE ERROR:\n");
+}
+
+
+
+        if(c_user_number.arr == v_same_num.arr) {
+                printf("이미 존재하는 사용자 번호입니다. 다른 번호를 입력하세요.\n");
+                return;
+            } else {
+                  printf("기존의 사용자 이름을 사용합니다");
+                  c_user_name.arr[c_user_name.len] = '\0';
+            }
+        }
+        else if(strlen(changeNum) == 0 && strlen(changeName) == 0) {
+            printf("기존의 사용자 번호 및 사용자 이름을 사용합니다");
+            /* EXEC SQL SELECT users.user_number, users.user_name INTO :c_user_number, :c_user_name FROM users, logdata WHERE users.user_number = logdata.current_login; */ 
+
+{
+            struct sqlexd sqlstm;
+            sqlstm.sqlvsn = 13;
+            sqlstm.arrsiz = 4;
+            sqlstm.sqladtp = &sqladt;
+            sqlstm.sqltdsp = &sqltds;
+            sqlstm.stmt = "select users.user_number ,users.user_name into :b\
+0,:b1  from users ,logdata where users.user_number=logdata.current_login";
+            sqlstm.iters = (unsigned int  )1;
+            sqlstm.offset = (unsigned int  )174;
+            sqlstm.selerr = (unsigned short)1;
+            sqlstm.sqlpfmem = (unsigned int  )0;
+            sqlstm.cud = sqlcud0;
+            sqlstm.sqlest = (unsigned char  *)&sqlca;
+            sqlstm.sqlety = (unsigned short)4352;
+            sqlstm.occurs = (unsigned int  )0;
+            sqlstm.sqhstv[0] = (         void  *)&c_user_number;
+            sqlstm.sqhstl[0] = (unsigned int  )14;
+            sqlstm.sqhsts[0] = (         int  )0;
+            sqlstm.sqindv[0] = (         void  *)0;
+            sqlstm.sqinds[0] = (         int  )0;
+            sqlstm.sqharm[0] = (unsigned int  )0;
+            sqlstm.sqadto[0] = (unsigned short )0;
+            sqlstm.sqtdso[0] = (unsigned short )0;
+            sqlstm.sqhstv[1] = (         void  *)&c_user_name;
+            sqlstm.sqhstl[1] = (unsigned int  )14;
+            sqlstm.sqhsts[1] = (         int  )0;
+            sqlstm.sqindv[1] = (         void  *)0;
+            sqlstm.sqinds[1] = (         int  )0;
+            sqlstm.sqharm[1] = (unsigned int  )0;
+            sqlstm.sqadto[1] = (unsigned short )0;
+            sqlstm.sqtdso[1] = (unsigned short )0;
+            sqlstm.sqphsv = sqlstm.sqhstv;
+            sqlstm.sqphsl = sqlstm.sqhstl;
+            sqlstm.sqphss = sqlstm.sqhsts;
+            sqlstm.sqpind = sqlstm.sqindv;
+            sqlstm.sqpins = sqlstm.sqinds;
+            sqlstm.sqparm = sqlstm.sqharm;
+            sqlstm.sqparc = sqlstm.sqharc;
+            sqlstm.sqpadto = sqlstm.sqadto;
+            sqlstm.sqptdso = sqlstm.sqtdso;
+            sqlcxt((void **)0, &sqlctx, &sqlstm, &sqlfpn);
+            if (sqlca.sqlcode < 0) sql_error("\7ORACLE ERROR:\n");
+}
+
+
+            c_user_number.arr[c_user_number.len] = '\0';
+            c_user_name.arr[c_user_name.len] = '\0';
+        }
+
+        sprintf(dynstmt, "UPDATE users SET user_number = :c_user_number.arr, user_name = :c_user_name.arr WHERE user_number = :v_current_login.arr");
+        /* EXEC SQL EXECUTE IMMEDIATE :dynstmt; */ 
+
+{
+        struct sqlexd sqlstm;
+        sqlstm.sqlvsn = 13;
+        sqlstm.arrsiz = 4;
+        sqlstm.sqladtp = &sqladt;
+        sqlstm.sqltdsp = &sqltds;
+        sqlstm.stmt = "";
+        sqlstm.iters = (unsigned int  )1;
+        sqlstm.offset = (unsigned int  )197;
+        sqlstm.cud = sqlcud0;
+        sqlstm.sqlest = (unsigned char  *)&sqlca;
+        sqlstm.sqlety = (unsigned short)4352;
+        sqlstm.occurs = (unsigned int  )0;
+        sqlstm.sqhstv[0] = (         void  *)dynstmt;
+        sqlstm.sqhstl[0] = (unsigned int  )1000;
+        sqlstm.sqhsts[0] = (         int  )0;
+        sqlstm.sqindv[0] = (         void  *)0;
+        sqlstm.sqinds[0] = (         int  )0;
+        sqlstm.sqharm[0] = (unsigned int  )0;
+        sqlstm.sqadto[0] = (unsigned short )0;
+        sqlstm.sqtdso[0] = (unsigned short )0;
+        sqlstm.sqphsv = sqlstm.sqhstv;
+        sqlstm.sqphsl = sqlstm.sqhstl;
+        sqlstm.sqphss = sqlstm.sqhsts;
+        sqlstm.sqpind = sqlstm.sqindv;
+        sqlstm.sqpins = sqlstm.sqinds;
+        sqlstm.sqparm = sqlstm.sqharm;
+        sqlstm.sqparc = sqlstm.sqharc;
+        sqlstm.sqpadto = sqlstm.sqadto;
+        sqlstm.sqptdso = sqlstm.sqtdso;
+        sqlcxt((void **)0, &sqlctx, &sqlstm, &sqlfpn);
+        if (sqlca.sqlcode < 0) sql_error("\7ORACLE ERROR:\n");
+}
+
+
+        printf("사용자 정보가 성공적으로 수정되었습니다.\n");
+    }
+
+    // 중복된 사용자 번호가 있는지 확인
+    // 커서를 사용해서 계속 돌면서 입력값이랑 비교?
+
+    /*--------------------------------------------------------------
+      계속해서 아래와 같이 나오는중
+     수정할 사용자 번호를 입력하세요 (미입력 시 기존값 사용) :
+     수정할 사용자 이름을 입력하세요 (미입력 시 기존값 사용) :
+     입력한 사용자 번호 길이 : 0, 입력한 사용자 이름 길이 : 0
+     기존의 사용자 번호를 사용합니다
+     ORACLE ERROR:
+     ORA-01008: 일부 변수가 바인드되지 않았습니다.
+    ---------------------------------------------------------------*/
+
+    
 
 }
 
@@ -722,7 +807,7 @@ struct { unsigned short len; unsigned char arr[12]; } v_current_login;
 _login into :b0,:b1,:b2  from users ,logdata where users.user_number=logdata.c\
 urrent_login";
    sqlstm.iters = (unsigned int  )1;
-   sqlstm.offset = (unsigned int  )170;
+   sqlstm.offset = (unsigned int  )216;
    sqlstm.selerr = (unsigned short)1;
    sqlstm.sqlpfmem = (unsigned int  )0;
    sqlstm.cud = sqlcud0;
@@ -784,7 +869,7 @@ urrent_login";
    sqlstm.stmt = "delete  from users  where (user_number=:b0 and user_name=:\
 b1)";
    sqlstm.iters = (unsigned int  )1;
-   sqlstm.offset = (unsigned int  )197;
+   sqlstm.offset = (unsigned int  )243;
    sqlstm.cud = sqlcud0;
    sqlstm.sqlest = (unsigned char  *)&sqlca;
    sqlstm.sqlety = (unsigned short)4352;
@@ -831,7 +916,7 @@ b1)";
    sqlstm.sqltdsp = &sqltds;
    sqlstm.stmt = "delete  from logdata  where current_login=:b0";
    sqlstm.iters = (unsigned int  )1;
-   sqlstm.offset = (unsigned int  )220;
+   sqlstm.offset = (unsigned int  )266;
    sqlstm.cud = sqlcud0;
    sqlstm.sqlest = (unsigned char  *)&sqlca;
    sqlstm.sqlety = (unsigned short)4352;
@@ -931,7 +1016,7 @@ struct { unsigned short len; unsigned char arr[12]; } v_book_code;
    sqlstm.sqltdsp = &sqltds;
    sqlstm.stmt = "";
    sqlstm.iters = (unsigned int  )1;
-   sqlstm.offset = (unsigned int  )239;
+   sqlstm.offset = (unsigned int  )285;
    sqlstm.cud = sqlcud0;
    sqlstm.sqlest = (unsigned char  *)&sqlca;
    sqlstm.sqlety = (unsigned short)4352;
@@ -974,7 +1059,7 @@ struct { unsigned short len; unsigned char arr[12]; } v_book_code;
    sqlstm.sqltdsp = &sqltds;
    sqlstm.stmt = "";
    sqlstm.iters = (unsigned int  )1;
-   sqlstm.offset = (unsigned int  )258;
+   sqlstm.offset = (unsigned int  )304;
    sqlstm.selerr = (unsigned short)1;
    sqlstm.sqlpfmem = (unsigned int  )0;
    sqlstm.cud = sqlcud0;
@@ -1004,7 +1089,7 @@ struct { unsigned short len; unsigned char arr[12]; } v_book_code;
         sqlstm.sqladtp = &sqladt;
         sqlstm.sqltdsp = &sqltds;
         sqlstm.iters = (unsigned int  )1;
-        sqlstm.offset = (unsigned int  )273;
+        sqlstm.offset = (unsigned int  )319;
         sqlstm.selerr = (unsigned short)1;
         sqlstm.sqlpfmem = (unsigned int  )0;
         sqlstm.cud = sqlcud0;
@@ -1087,7 +1172,7 @@ struct { unsigned short len; unsigned char arr[12]; } v_book_code;
    sqlstm.sqladtp = &sqladt;
    sqlstm.sqltdsp = &sqltds;
    sqlstm.iters = (unsigned int  )1;
-   sqlstm.offset = (unsigned int  )308;
+   sqlstm.offset = (unsigned int  )354;
    sqlstm.cud = sqlcud0;
    sqlstm.sqlest = (unsigned char  *)&sqlca;
    sqlstm.sqlety = (unsigned short)4352;
@@ -1099,43 +1184,6 @@ struct { unsigned short len; unsigned char arr[12]; } v_book_code;
 
 
 }
-
-void Add_book_loan() 
-{
-/*-----------------------------------------------------------------------------------
-2.6 도서 대출
--------------------------------------------------------------------------------------*/
-
-/* EXEC SQL BEGIN DECLARE SECTION; */ 
-
-   /* varchar v_book_number[12]; */ 
-struct { unsigned short len; unsigned char arr[12]; } v_book_number;
-
-   /* varchar v_user_number[12]; */ 
-struct { unsigned short len; unsigned char arr[12]; } v_user_number;
-
-   /* varchar v_loan_status[12]; */ 
-struct { unsigned short len; unsigned char arr[12]; } v_loan_status;
-
-
-   char dynstmt[1000];
-/* EXEC SQL END DECLARE SECTION; */ 
-
-
-   char inputBookNum[20];
-   char inputBookName[20];
-
-   /* Register sql_error() as the error handler. */
-   /* EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n"); */ 
-
-
-   printf("대출");
-
-
-}
-
-
-
 
 void Search_my_loan()
 {
@@ -1178,7 +1226,7 @@ struct { unsigned short len; unsigned char arr[20]; } v_book_duedate;
    sqlstm.sqltdsp = &sqltds;
    sqlstm.stmt = "";
    sqlstm.iters = (unsigned int  )1;
-   sqlstm.offset = (unsigned int  )323;
+   sqlstm.offset = (unsigned int  )369;
    sqlstm.cud = sqlcud0;
    sqlstm.sqlest = (unsigned char  *)&sqlca;
    sqlstm.sqlety = (unsigned short)4352;
@@ -1221,7 +1269,7 @@ struct { unsigned short len; unsigned char arr[20]; } v_book_duedate;
    sqlstm.sqltdsp = &sqltds;
    sqlstm.stmt = "";
    sqlstm.iters = (unsigned int  )1;
-   sqlstm.offset = (unsigned int  )342;
+   sqlstm.offset = (unsigned int  )388;
    sqlstm.selerr = (unsigned short)1;
    sqlstm.sqlpfmem = (unsigned int  )0;
    sqlstm.cud = sqlcud0;
@@ -1251,7 +1299,7 @@ struct { unsigned short len; unsigned char arr[20]; } v_book_duedate;
         sqlstm.sqladtp = &sqladt;
         sqlstm.sqltdsp = &sqltds;
         sqlstm.iters = (unsigned int  )1;
-        sqlstm.offset = (unsigned int  )357;
+        sqlstm.offset = (unsigned int  )403;
         sqlstm.selerr = (unsigned short)1;
         sqlstm.sqlpfmem = (unsigned int  )0;
         sqlstm.cud = sqlcud0;
@@ -1317,7 +1365,7 @@ struct { unsigned short len; unsigned char arr[20]; } v_book_duedate;
    sqlstm.sqladtp = &sqladt;
    sqlstm.sqltdsp = &sqltds;
    sqlstm.iters = (unsigned int  )1;
-   sqlstm.offset = (unsigned int  )384;
+   sqlstm.offset = (unsigned int  )430;
    sqlstm.cud = sqlcud0;
    sqlstm.sqlest = (unsigned char  *)&sqlca;
    sqlstm.sqlety = (unsigned short)4352;
@@ -1359,7 +1407,7 @@ void sql_error(char *msg)
     sqlstm.sqladtp = &sqladt;
     sqlstm.sqltdsp = &sqltds;
     sqlstm.iters = (unsigned int  )1;
-    sqlstm.offset = (unsigned int  )399;
+    sqlstm.offset = (unsigned int  )445;
     sqlstm.cud = sqlcud0;
     sqlstm.sqlest = (unsigned char  *)&sqlca;
     sqlstm.sqlety = (unsigned short)4352;
