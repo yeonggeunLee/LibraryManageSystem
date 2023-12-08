@@ -1,0 +1,526 @@
+// win32 Visual C 컴파일시 추가
+// 프로그램 가장 첫 줄에 추가할 것
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <conio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <windows.h>
+
+/* for oracle */
+#include <sqlda.h>
+#include <sqlca.h>
+#include <sqlcpr.h>
+
+void sql_error(char *msg) ;
+
+
+void DB_connect();
+void signup();
+void login();
+void searchbook();
+void searchbook_resultlist();
+void bookdetail();
+void mypage();
+void mypage_loanlist();
+
+EXEC SQL BEGIN DECLARE SECTION;
+	VARCHAR uid[80];
+	VARCHAR pwd[20];
+EXEC SQL END DECLARE SECTION;
+
+
+// win32 Visual C 컴파일시 추가
+#define getch() _getch()
+
+
+void print_screen(char fname[]);
+
+int login_state;
+char keyword[10];
+
+
+
+void gotoxy(int x, int y) {
+    COORD coord;
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+struct UserInfo {
+    char id[20];
+    char name[20];
+    char birth[20];
+    char type[10];
+};
+
+struct UserInfo user;
+
+struct BookInfo {
+    char number[20];
+    char title[20];
+    char author[20];
+    char publisher[20];
+};
+
+struct BookInfo book;
+
+void clearLine(int x, int y, int length) {
+    gotoxy(x, y);
+    for (int i = 0; i < length; ++i) {
+        printf(" ");
+    }
+}
+
+int main() {
+    _putenv("NLS_LANG=American_America.KO16KSC5601");
+    DB_connect();
+
+    char op[20];
+
+    login_state = 0;
+    while (1) {
+        if (login_state == 0) {
+            system("cls");
+            print_screen("guest_main.txt");
+
+            gotoxy(2, 20);
+            fgets(op, sizeof(op), stdin);
+            op[strcspn(op, "\n")] = '\0';
+
+
+            if ((strcmp(op, "1") == 0)) {
+                searchbook();
+            }
+            if ((strcmp(op, "2") == 0)) {
+                login();
+            }
+            if ((strcmp(op, "3") == 0)) {
+                signup();
+            }
+            if ((strcmp(op, "0") == 0)) {
+                
+                break;
+            }
+        }
+        else if (login_state == 1) {
+            system("cls");
+            print_screen("member_main.txt");
+
+            gotoxy(2, 20);
+            fgets(op, sizeof(op), stdin);
+            op[strcspn(op, "\n")] = '\0';
+
+            if ((strcmp(op, "1") == 0)) {
+                searchbook();
+            }
+            if ((strcmp(op, "2") == 0)) {
+                mypage();
+            }
+            if ((strcmp(op, "3") == 0)) {
+                memset(&user, 0, sizeof(user));
+                login_state = 0;
+                MessageBox(NULL, L"로그아웃을 완료하였습니다.", L"오류", MB_OK | MB_ICONINFORMATION);
+            }
+        }
+    }
+    
+    
+    return 0;
+}
+
+void DB_connect()
+{
+   /* 본인 계정이름으로 바꾸어 쓸 것 */
+   strcpy((char *)uid.arr,"b20212952@//sedb.deu.ac.kr:1521/orcl");
+   uid.len = (short) strlen((char *)uid.arr);
+   /* 본인 계정 암호로 바꾸어 쓸 것 */
+   strcpy((char *)pwd.arr,"20212952");
+   pwd.len = (short) strlen((char *)pwd.arr);
+
+   EXEC SQL CONNECT :uid IDENTIFIED BY :pwd;
+
+	// connection이 실패했을경우의 처리부분
+
+	if (sqlca.sqlcode != 0 && sqlca.sqlcode != -1405){ 
+		printf("\7Connect error: %s", sqlca.sqlerrm.sqlerrmc);
+		getch();
+		exit(-1);
+	}
+
+    printf("Oracle Connect SUCCESS by %s\n", uid.arr);
+
+}
+
+void signup() {
+    system("cls");
+    print_screen("guest_signup.txt");
+
+    while (1) {
+
+        while (1) {
+            clearLine(45, 7, 10);
+            gotoxy(45, 7);
+
+            fgets(user.id, sizeof(user.id), stdin);
+            user.id[strcspn(user.id, "\n")] = '\0';
+
+            if (strcmp(user.id, "\0") == 0) {
+                MessageBox(NULL, L"학번을 입력해 주세요.", L"알림", MB_OK | MB_ICONINFORMATION);
+
+                continue;
+            }
+            else {
+                break;
+            }
+        }
+
+        while (1) {
+            clearLine(45, 10, 10);
+            gotoxy(45, 10);
+
+            fgets(user.name, sizeof(user.name), stdin);
+            user.name[strcspn(user.name, "\n")] = '\0';
+
+            if (strcmp(user.name, "\0") == 0) {
+                MessageBox(NULL, L"이름을 입력해 주세요.", L"알림", MB_OK | MB_ICONINFORMATION);
+
+                continue;
+            }
+            else {
+                break;
+            }
+        }
+
+        while (1) {
+            clearLine(45, 13, 10);
+            gotoxy(45, 13);
+
+            fgets(user.birth, sizeof(user.birth), stdin);
+            user.birth[strcspn(user.birth, "\n")] = '\0';
+
+            if (strcmp(user.birth, "\0") == 0) {
+                MessageBox(NULL, L"생년월일을 입력해 주세요.", L"알림", MB_OK | MB_ICONINFORMATION);
+
+                continue;
+            }
+            else {
+                break;
+            }
+        }
+
+        if (user.id == "1234") {
+            MessageBox(NULL, L"이미 가입된 학번입니다.", L"알림", MB_OK | MB_ICONINFORMATION);
+            continue;
+        }
+        else {
+            MessageBox(NULL, L"회원가입 완료", L"알림", MB_OK | MB_ICONINFORMATION);
+            break;
+        }
+
+    }
+}
+
+
+/*여기에 로그인 성공 시 logdata에 현재 로그인된 아이디 테이블 튜플들 전부 삭제하고 insert하기*/
+void login() {
+    system("cls");
+    print_screen("guest_login.txt");
+
+    char id[20];
+    char name[20];
+
+    strcpy(user.id, id);
+    strcpy(user.name, name);
+
+    while (1) {
+        clearLine(42, 8, 13);
+        gotoxy(43, 8);
+
+        gets(id);
+
+        clearLine(42, 11, 13);
+        gotoxy(43, 11);
+
+        gets(name);
+
+        /* 여기에 아이디 조회 넣기*/
+
+
+        if ((strcmp(id, "1234") == 0 && (strcmp(name, "yg") == 0)) || (strcmp(user.id, id) == 0 && (strcmp(user.name, id) == 0))) {
+            MessageBox(NULL, L"로그인 완료", L"알림", MB_OK | MB_ICONINFORMATION);
+            strcpy(user.id, id);
+            strcpy(user.name, name);
+            
+            login_state = 1;
+
+            break;
+
+        }
+        else {
+            MessageBox(NULL, L"로그인 아이디 또는 비번이 맞지 않습니다.", L"알림", MB_OK | MB_ICONINFORMATION);
+            continue;
+        }
+
+    }
+}
+
+void searchbook() {
+    system("cls");
+    print_screen("combined_searchbook.txt");
+
+    while (1) {
+        
+        gotoxy(43, 7);
+
+        gets(book.number);
+
+
+        gotoxy(43, 9);
+
+        gets(book.title);
+
+
+        gotoxy(43, 11);
+
+        gets(book.author);
+
+
+        gotoxy(43, 13);
+
+        gets(book.publisher);
+
+
+        searchbook_resultlist();
+
+
+    }
+}
+
+#define PAGE_NUM 8
+void searchbook_resultlist() {
+/*도서번호에 8만 넣고 뒤쪽에 보면 짤림*/
+    char op[20];
+    system("cls");
+    print_screen("combined_searchbook_resultlist.txt");
+
+    EXEC SQL BEGIN DECLARE SECTION;
+       varchar v_book_number[12];
+       varchar v_book_title[37];
+       varchar v_book_author[12];
+       varchar v_book_publisher[12];
+
+       char dynstmt[1000];
+    EXEC SQL END DECLARE SECTION;
+
+    int x, y, count = 0, i;
+
+     /* Register sql_error() as the error handler. */
+     //EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+
+     /* 실행시킬 SQL 문장*/
+     sprintf(dynstmt, "SELECT book_number, book_title, book_author, book_publisher FROM books WHERE to_char(book_number) LIKE '%%%s%%' AND book_title LIKE '%%%s%%' AND book_author LIKE '%%%s%%' AND book_publisher LIKE '%%%s%%'", book.number, book.title, book.author, book.publisher);
+     EXEC SQL PREPARE S FROM :dynstmt;
+   
+     /* 커서 선언 */   
+     EXEC SQL DECLARE c_cursor CURSOR FOR S ;
+  
+     /* 커서 오픈 */
+     EXEC SQL OPEN c_cursor;
+
+     EXEC SQL WHENEVER NOT FOUND DO break;
+     
+     x = 7;
+     y = 7;
+
+     for (;;)
+     {
+         EXEC SQL FETCH c_cursor INTO :v_book_number, :v_book_title, :v_book_author, :v_book_publisher;
+
+	v_book_number.arr[v_book_number.len] = '\0' ;
+	v_book_title.arr[v_book_title.len] = '\0' ;
+	v_book_author.arr[v_book_author.len] = '\0' ;
+ 	v_book_publisher.arr[v_book_publisher.len] = '\0' ;
+
+            gotoxy(x, y);
+            printf("%s %28s %19s %16s\n", v_book_number.arr, v_book_title.arr, v_book_author.arr, v_book_publisher.arr);
+            y++;
+            count++;
+
+            if( count == PAGE_NUM){
+                gotoxy(14,18);
+	   printf("\n                                  hit any key\n");
+	   count = 0;
+	   getch();
+
+            gotoxy(13, 7); //이전 화면 부분 클리어
+            for(i= 0; i < PAGE_NUM; i++){
+		printf("                                                          \n");
+	   }
+
+	   y = 7 ;
+	}
+     }
+    gotoxy(11, 17);
+    printf("                              (END)\n");
+   
+    EXEC SQL CLOSE c_cursor;
+
+    gotoxy(2, 20);
+    fgets(op, sizeof(op), stdin);
+    op[strcspn(op, "\n")] = '\0';
+
+    if ((strcmp(op, "1") == 0)) {
+        bookdetail();
+            
+    }
+    if ((strcmp(op, "0") == 0)) {
+        
+    }
+}
+
+
+void bookdetail() {
+    char op[20];
+
+    if (user.type == "admin") {
+        system("cls");
+        print_screen("admin_bookdetail.txt");
+
+        gotoxy(2, 20);
+        fgets(op, sizeof(op), stdin);
+        op[strcspn(op, "\n")] = '\0';
+
+        if ((strcmp(op, "1") == 0)) {
+            //bookdetail_modify();
+
+        }
+        if ((strcmp(op, "2") == 0)) {
+            // 도서 삭제 sql 구문
+
+        }
+        if ((strcmp(op, "3") == 0)) {
+            //managebook_loan();
+
+        }
+        if ((strcmp(op, "4") == 0)) {
+            //returnbook();
+
+        }
+        if ((strcmp(op, "0") == 0)) {
+            
+
+        }
+    }
+    if (login_state == 1) {
+        system("cls");
+        print_screen("member_bookdetail.txt");
+
+        while (1) {
+            clearLine(2, 20, 1);
+            gotoxy(2, 20);
+            fgets(op, sizeof(op), stdin);
+            op[strcspn(op, "\n")] = '\0';
+
+            if ((strcmp(op, "1") == 0)) {
+                // 사용자 도서 대출 sql 구문
+                printf("대출 실행");
+            }
+            if ((strcmp(op, "0") == 0)) {
+                searchbook_resultlist();
+                break;
+            }
+        }
+    }
+}
+
+void mypage() {
+    char op[20];
+    system("cls");
+    print_screen("member_mypage.txt");
+/*
+EXEC SQL BEGIN DECLARE SECTION;
+   varchar v_user_number[12];
+   varchar v_user_name[12];
+   int v_user_loans;
+   int v_user_overdue;
+
+EXEC SQL END DECLARE SECTION;
+
+    EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:\n");
+   
+    EXEC SQL SELECT users.user_number, users.user_name, users.user_loans, users.user_overdue
+                    INTO :v_user_number, :v_user_name, :v_user_loans, :v_user_overdue
+                  FROM users, logdata
+                  WHERE users.user_number = logdata.current_login;
+
+    v_user_number.arr[v_user_number.len] = '\0';
+    v_user_name.arr[v_user_name.len] = '\0';
+
+    gotoxy(7, 40);
+    printf("%s", user.id);
+
+    gotoxy(8, 40);
+    printf("%s", user.name);
+
+    gotoxy(9, 40);
+    printf("%d", v_user_loans);
+
+    gotoxy(10, 40);
+    printf("%d", v_user_overdue);
+*/
+    gotoxy(2, 20);
+    gets(op);
+
+    if ((strcmp(op, "1") == 0)) {
+        mypage_loanlist();
+        
+    }
+    if ((strcmp(op, "0") == 0)) {
+
+    }
+
+}
+
+
+void mypage_loanlist() {
+    char op[20];
+    system("cls");
+    print_screen("member_mypage_loanlist.txt");
+
+    gotoxy(2, 20);
+    fgets(op, sizeof(op), stdin);
+    op[strcspn(op, "\n")] = '\0';
+
+    if ((strcmp(op, "1") == 0)) {
+        mypage_loanlist();
+
+    }
+}
+
+
+void print_screen(char fname[])
+{
+    FILE* fp;
+    char line[100];
+
+    if ((fp = fopen(fname, "r")) == NULL) {
+        printf("file open error\n");
+        getch();
+        exit(-1);
+    }
+    while (1)
+    {
+        if (fgets(line, 99, fp) == NULL) {
+            break;
+        }
+        printf("%s", line);
+    }
+
+    fclose(fp);
+}

@@ -1,0 +1,58 @@
+통합된 도서검색
+combined_searchbook
+
+통합된 도서검색 결과목록
+combined_searchbook_resultlist
+
+비회원 메인페이지
+guest_main
+
+회원가입
+guest_signup
+
+로그인
+guest_login
+
+
+회원 메인페이지
+member_main
+
+회원 마이페이지
+member_mypage
+
+회원 마이페이지 대출목록
+member_mypage_loanlist
+
+회원 마이페이지 정보수정
+member_mypage_modify
+
+회원 도서상세
+member_bookdetail
+
+
+관리자 메인페이지
+admin_main
+
+관리자 도서상세 (정보 수정, 삭제, 반납)
+admin_bookdetail
+
+관리자 도서상세 정보수정
+admin_bookdetail_modify
+
+관리자 회원검색
+admin_searchmember
+
+관리자 회원검색 결과목록
+admin_searchmember_resultlist
+
+관리자 회원상세 (정보 수정, 삭제, 대출기록)
+admin_memberdetail
+
+관리자 회원상세 정보수정
+admin_memberdetail_modify
+
+관리자 회원상세 대출기록
+admin_memberdetail_loanlist
+
+관리자 도서 생성
+admin_createbook
