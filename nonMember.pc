@@ -209,63 +209,33 @@ EXEC SQL END DECLARE SECTION;
 -------------------------------------------------------------------------- */
 void login_user()
 {
-EXEC SQL BEGIN DECLARE SECTION;
-   varchar v_user_number[12];
-   varchar v_user_name[37];
+    EXEC SQL BEGIN DECLARE SECTION;
+        varchar v_user_number[11];
+        varchar v_user_name[11];
+    EXEC SQL END DECLARE SECTION;
 
-   char dynstmt[1000];
-EXEC SQL END DECLARE SECTION;
+    char inputUserNumber[10];
+    char inputUserName[10];
 
-   char inputUserNum[10];
-   char inputUserName[30];
-   int loginSuccess = 0;
+    printf("로그인을 위해 사용자 번호를 입력하세요 : ");
+    gets(inputUserNumber);
+    printf("로그인을 위해 사용자 이름을 입력하세요 : ");
+    gets(inputUserName);
 
-   /* Register sql_error() as the error handler. */
-   EXEC SQL WHENEVER SQLERROR DO sql_error("\7ORACLE ERROR:
-");
+    sprintf(v_user_number.arr, "%s", inputUserNumber);
+    v_user_number.len = strlen(v_user_number.arr);
+    sprintf(v_user_name.arr, "%s", inputUserName);
+    v_user_name.len = strlen(v_user_name.arr);
 
-   printf("사용자 번호를 입력하세요 : ");
-   gets(inputUserNum);
+    EXEC SQL SELECT user_number, user_name INTO :v_user_number, :v_user_name
+    FROM users
+    WHERE user_number = :v_user_number AND user_name = :v_user_name;
 
-   printf("사용자 이름을 입력하세요 : ");
-   gets(inputUserName);
-
-   sprintf(dynstmt, "SELECT USER_NUMBER, USER_NAME FROM USERS WHERE USER_NUMBER = %s AND USER_NAME = '%s'", inputUserNum, inputUserName);
-   
-   printf("dynstmt : %s
-", dynstmt);
-
-   EXEC SQL PREPARE S FROM :dynstmt;
-   
-   /* 커서 선언 */   
-   EXEC SQL DECLARE c_cursor CURSOR FOR S ;
-  
-   /* 커서 오픈 */
-   EXEC SQL OPEN c_cursor;
-
-   for (;;)
-    {
-        EXEC SQL FETCH c_cursor INTO :v_user_number, :v_user_name;
-
-	v_user_number.arr[v_user_number.len] = '\0' ;
-	v_user_name.arr[v_user_name.len] = '\0' ;
-
-	if (strcmp(v_user_number.arr, inputUserNum) == 0 && strcmp(v_user_name.arr, inputUserName) == 0)
-	{
-		printf("로그인에 성공했습니다.
-");
-                loginSuccess = 1;
-		break;
-	}
+    if (v_user_number.len != 0 && v_user_name.len != 0) {
+        printf("로그인 성공.\n");
+    } else {
+        printf("로그인 실패. 사용자 번호와 이름을 확인해주세요.\n");
     }
-   
-   if (loginSuccess == 0)
-   {
-        printf("아이디나 비밀번호를 확인해주세요.
-");
-   }
-
-   EXEC SQL CLOSE c_cursor;
 }
 
 
