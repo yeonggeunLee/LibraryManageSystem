@@ -27,6 +27,7 @@ void memberdetail();
 void memberdetail_loanlist();
 void memberdetail_modify();
 void createbook();
+void statistics();
 
 void gotoxy(int x, int y) {
     COORD coord;
@@ -129,6 +130,9 @@ int main() {
             }
             if ((strcmp(op, "4") == 0)) {
                 searchmemeber();
+            }
+            if ((strcmp(op, "5") == 0)) {
+                statistics();
             }
             if ((strcmp(op, "0") == 0)) {
                 memset(&user, 0, sizeof(user));
@@ -762,6 +766,21 @@ void createbook() {
     }
 
     MessageBox(NULL, L"도서 추가 완료.", L"알림", MB_OK | MB_ICONINFORMATION);
+}
+
+void statistics() {
+
+    char op[20];
+    system("cls");
+    print_screen("admin_statistics.txt");
+
+    gotoxy(2, 20);
+    fgets(op, sizeof(op), stdin);
+    op[strcspn(op, "\n")] = '\0';
+
+    if ((strcmp(op, "\0") == 0)) {
+        MessageBox(NULL, L"통계 확인 완료.", L"알림", MB_OK | MB_ICONINFORMATION);
+    }
 }
 
 void print_screen(char fname[])
