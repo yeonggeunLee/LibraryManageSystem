@@ -107,7 +107,7 @@ int main() {
             if ((strcmp(op, "0") == 0)) {
                 memset(&user, 0, sizeof(user));
                 login_state = 0;
-                MessageBox(NULL, L"ë¡œê·¸ì•„ì›ƒì„ ì™„ë£Œí•˜ì˜€ìŠµë‹ˆë‹¤.", L"ì˜¤ë¥˜", MB_OK | MB_ICONINFORMATION);
+                MessageBox(NULL, L"·Î±×¾Æ¿ôÀ» ¿Ï·áÇÏ¿´½À´Ï´Ù.", L"¿À·ù", MB_OK | MB_ICONINFORMATION);
             }
         }
         else if (login_state == 2) {
@@ -133,7 +133,7 @@ int main() {
             if ((strcmp(op, "0") == 0)) {
                 memset(&user, 0, sizeof(user));
                 login_state = 0;
-                MessageBox(NULL, L"ë¡œê·¸ì•„ì›ƒì„ ì™„ë£Œí•˜ì˜€ìŠµë‹ˆë‹¤.", L"ì˜¤ë¥˜", MB_OK | MB_ICONINFORMATION);
+                MessageBox(NULL, L"·Î±×¾Æ¿ôÀ» ¿Ï·áÇÏ¿´½À´Ï´Ù.", L"¿À·ù", MB_OK | MB_ICONINFORMATION);
             }
         }
     }
@@ -156,7 +156,7 @@ void signup() {
             user.id[strcspn(user.id, "\n")] = '\0';
 
             if (strcmp(user.id, "\0") == 0) {
-                MessageBox(NULL, L"í•™ë²ˆì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+                MessageBox(NULL, L"ÇĞ¹øÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
                 continue;
             }
@@ -173,7 +173,7 @@ void signup() {
             user.name[strcspn(user.name, "\n")] = '\0';
 
             if (strcmp(user.name, "\0") == 0) {
-                MessageBox(NULL, L"ì´ë¦„ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+                MessageBox(NULL, L"ÀÌ¸§À» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
                 continue;
             }
@@ -182,29 +182,14 @@ void signup() {
             }
         }
 
-        while (1) {
-            clearLine(45, 13, 10);
-            gotoxy(45, 13);
-
-            fgets(user.birth, sizeof(user.birth), stdin);
-            user.birth[strcspn(user.birth, "\n")] = '\0';
-
-            if (strcmp(user.birth, "\0") == 0) {
-                MessageBox(NULL, L"ìƒë…„ì›”ì¼ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
-
-                continue;
-            }
-            else {
-                break;
-            }
-        }
+        
 
         if (user.id == "1234") {
-            MessageBox(NULL, L"ì´ë¯¸ ê°€ì…ëœ í•™ë²ˆì…ë‹ˆë‹¤.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"ÀÌ¹Ì °¡ÀÔµÈ ÇĞ¹øÀÔ´Ï´Ù.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
             continue;
         }
         else {
-            MessageBox(NULL, L"íšŒì›ê°€ì… ì™„ë£Œ", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"È¸¿ø°¡ÀÔ ¿Ï·á", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
             break;
         }
 
@@ -228,9 +213,9 @@ void login() {
         fgets(user.name, sizeof(user.name), stdin);
         user.name[strcspn(user.name, "\n")] = '\0';
 
-        if ((strcmp(user.id, "20213006") == 0 && (strcmp(user.name, "ê¹€ì°¬ì†”") == 0)) || (strcmp(user.id, "1234") == 0 && (strcmp(user.name, "1234") == 0)) ||
+        if ((strcmp(user.id, "20213006") == 0 && (strcmp(user.name, "±èÂù¼Ö") == 0)) || (strcmp(user.id, "1234") == 0 && (strcmp(user.name, "1234") == 0)) ||
             (strcmp(user.id, "admin") == 0 && (strcmp(user.name, "admin") == 0))) {
-            MessageBox(NULL, L"ë¡œê·¸ì¸ ì™„ë£Œ", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"·Î±×ÀÎ ¿Ï·á", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
             
             if ((strcmp(user.id, "admin"))==0) {
                 login_state = 2;
@@ -243,7 +228,7 @@ void login() {
 
         }
         else {
-            MessageBox(NULL, L"ë¡œê·¸ì¸ ì•„ì´ë”” ë˜ëŠ” ë¹„ë²ˆì´ ë§ì§€ ì•ŠìŠµë‹ˆë‹¤.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"·Î±×ÀÎ ¾ÆÀÌµğ ¶Ç´Â ºñ¹øÀÌ ¸ÂÁö ¾Ê½À´Ï´Ù.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
             continue;
         }
 
@@ -282,7 +267,7 @@ void searchbook() {
 
         if (strcmp(book.number, "\0") == 0 && strcmp(book.title, "\0") == 0 &&
             strcmp(book.author, "\0") == 0 && strcmp(book.publisher, "\0") == 0) {
-            MessageBox(NULL, L"í‚¤ì›Œë“œë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"Å°¿öµå¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
             continue;
         }
         else {
@@ -329,10 +314,10 @@ void bookdetail() {
             bookdetail();
         }
         if ((strcmp(op, "2") == 0)) {
-            //sql ë„ì„œ ì‚­ì œ êµ¬ë¬¸
+            //sql µµ¼­ »èÁ¦ ±¸¹®
 
-            //ë„ì„œ ì‚­ì œ í›„ ë„ì„œ ì—…ë°ì´íŠ¸
-            MessageBox(NULL, L"ë„ì„œ ì‚­ì œ ì²˜ë¦¬ ì™„ë£Œ.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            //µµ¼­ »èÁ¦ ÈÄ µµ¼­ ¾÷µ¥ÀÌÆ®
+            MessageBox(NULL, L"µµ¼­ »èÁ¦ Ã³¸® ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
             bookdetail();
         }
         if ((strcmp(op, "3") == 0)) {
@@ -340,9 +325,9 @@ void bookdetail() {
             bookdetail();
         }
         if ((strcmp(op, "4") == 0)) {
-            //sql ë„ì„œ ë°˜ë‚© êµ¬ë¬¸
+            //sql µµ¼­ ¹İ³³ ±¸¹®
 
-            MessageBox(NULL, L"ë„ì„œ ë°˜ë‚© ì²˜ë¦¬ ì™„ë£Œ.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"µµ¼­ ¹İ³³ Ã³¸® ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
             bookdetail();
         }
         if ((strcmp(op, "0") == 0)) {
@@ -361,9 +346,9 @@ void bookdetail() {
         op[strcspn(op, "\n")] = '\0';
 
         if ((strcmp(op, "1") == 0)) {
-            // ì‚¬ìš©ì ë„ì„œ ëŒ€ì¶œ sql êµ¬ë¬¸
+            // »ç¿ëÀÚ µµ¼­ ´ëÃâ sql ±¸¹®
 
-            MessageBox(NULL, L"ë„ì„œ ëŒ€ì¶œ ì²˜ë¦¬ ì™„ë£Œ.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"µµ¼­ ´ëÃâ Ã³¸® ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
             bookdetail();
         }
         if ((strcmp(op, "0") == 0)) {
@@ -394,11 +379,11 @@ void mypage() {
 
     }
     if ((strcmp(op, "3") == 0)) {
-        //íšŒì› ì •ë³´ ì‚­ì œ sql êµ¬ë¬¸
+        //È¸¿ø Á¤º¸ »èÁ¦ sql ±¸¹®
 
         memset(&user, 0, sizeof(user));
         login_state = 0;
-        MessageBox(NULL, L"íšŒì› ê³„ì • ì‚­ì œ ì™„ë£Œ.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+        MessageBox(NULL, L"È¸¿ø °èÁ¤ »èÁ¦ ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
         
         return;
     }
@@ -435,7 +420,7 @@ void mypage_modify() {
         user.id[strcspn(user.id, "\n")] = '\0';
 
         if (strcmp(user.id, "\0") == 0) {
-            MessageBox(NULL, L"íšŒì› ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"È¸¿ø ¹øÈ£¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -450,7 +435,7 @@ void mypage_modify() {
         user.name[strcspn(user.name, "\n")] = '\0';
 
         if (strcmp(user.name, "\0") == 0) {
-            MessageBox(NULL, L"íšŒì› ì´ë¦„ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"È¸¿ø ÀÌ¸§À» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -459,21 +444,7 @@ void mypage_modify() {
         }
     }
 
-    while (1) {
-        gotoxy(45, 12);
-        fgets(user.birth, sizeof(user.birth), stdin);
-        user.birth[strcspn(user.birth, "\n")] = '\0';
-
-        if (strcmp(user.birth, "\0") == 0) {
-            MessageBox(NULL, L"íšŒì› ìƒë…„ì›”ì¼ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
-
-            continue;
-        }
-        else {
-            break;
-        }
-    }
-    MessageBox(NULL, L"íšŒì› ì •ë³´ ìˆ˜ì • ì™„ë£Œ.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+    MessageBox(NULL, L"È¸¿ø Á¤º¸ ¼öÁ¤ ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 }
 
 void managebook() {
@@ -486,7 +457,7 @@ void managebook() {
     op[strcspn(op, "\n")] = '\0';
 
     
-    //ê° ë„ì„œ ë²ˆí˜¸ì„ íƒì‹œ í•´ë‹¹ ìƒì„¸ ì •ë³´ë¡œ ì´ë™
+    //°¢ µµ¼­ ¹øÈ£¼±ÅÃ½Ã ÇØ´ç »ó¼¼ Á¤º¸·Î ÀÌµ¿
     if ((strcmp(op, "1") == 0)) {
         bookdetail();
     }
@@ -505,7 +476,7 @@ void bookdetail_modify() {
         book.number[strcspn(book.number, "\n")] = '\0';
 
         if (strcmp(book.number, "\0") == 0) {
-            MessageBox(NULL, L"ë„ì„œ ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"µµ¼­ ¹øÈ£¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -520,7 +491,7 @@ void bookdetail_modify() {
         book.title[strcspn(book.title, "\n")] = '\0';
 
         if (strcmp(book.title, "\0") == 0) {
-            MessageBox(NULL, L"ë„ì„œ ì œëª©ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"µµ¼­ Á¦¸ñÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -535,7 +506,7 @@ void bookdetail_modify() {
         book.author[strcspn(book.author, "\n")] = '\0';
 
         if (strcmp(user.id, "\0") == 0) {
-            MessageBox(NULL, L"ë„ì„œ ì €ìë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"µµ¼­ ÀúÀÚ¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -550,7 +521,7 @@ void bookdetail_modify() {
         book.publisher[strcspn(book.publisher, "\n")] = '\0';
 
         if (strcmp(book.publisher, "\0") == 0) {
-            MessageBox(NULL, L"ë„ì„œ ì¶œíŒì‚¬ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"µµ¼­ ÃâÆÇ»ç¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -559,7 +530,7 @@ void bookdetail_modify() {
         }
     }
 
-    MessageBox(NULL, L"ë„ì„œ ì •ë³´ ìˆ˜ì • ì™„ë£Œ.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+    MessageBox(NULL, L"µµ¼­ Á¤º¸ ¼öÁ¤ ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 }
 
 void managebook_loan() {
@@ -574,10 +545,10 @@ void managebook_loan() {
     if ((strcmp(id, "\0") == 0)) {
     }
     else {
-        //ë„ì„œ ëŒ€ì¶œ sql ì²˜ë¦¬
+        //µµ¼­ ´ëÃâ sql Ã³¸®
 
 
-        MessageBox(NULL, L"ë„ì„œ ëŒ€ì¶œ ì²˜ë¦¬ ì™„ë£Œ.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+        MessageBox(NULL, L"µµ¼­ ´ëÃâ Ã³¸® ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
         
     }
 }
@@ -607,7 +578,7 @@ void searchmemeber() {
 
 
         if (strcmp(user.id, "\0") == 0 && strcmp(user.name, "\0") == 0 && strcmp(user.birth, "\0") == 0) {
-            MessageBox(NULL, L"í‚¤ì›Œë“œë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"Å°¿öµå¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
             continue;
         }
         else {
@@ -629,7 +600,7 @@ void searchmember_resultlist() {
     op[strcspn(op, "\n")] = '\0';
 
 
-    //ê° íšŒì› ë²ˆí˜¸ì— ë§ëŠ” 1~10ê¹Œì§€ ìˆ«ì í• ë‹¹ ë° memberdetailë¡œ ì´ë™
+    //°¢ È¸¿ø ¹øÈ£¿¡ ¸Â´Â 1~10±îÁö ¼ıÀÚ ÇÒ´ç ¹× memberdetail·Î ÀÌµ¿
     if ((strcmp(op, "1") == 0)) {
         memberdetail();
 
@@ -657,15 +628,15 @@ void memberdetail() {
 
     }
     if ((strcmp(op, "3") == 0)) {
-        //íšŒì› ë°˜ë‚© ì²˜ë¦¬ sql êµ¬ë¬¸
+        //È¸¿ø ¹İ³³ Ã³¸® sql ±¸¹®
 
-        MessageBox(NULL, L"íšŒì› ë„ì„œ ë°˜ë‚©ì²˜ë¦¬ ì™„ë£Œ.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+        MessageBox(NULL, L"È¸¿ø µµ¼­ ¹İ³³Ã³¸® ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
         memberdetail();
 
     }
     if ((strcmp(op, "4") == 0)) {
-        //íšŒì› ì •ë³´ ì‚­ì œ sql êµ¬ë¬¸
-        MessageBox(NULL, L"íšŒì› ì •ë³´ ì‚­ì œì²˜ë¦¬ ì™„ë£Œ.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+        //È¸¿ø Á¤º¸ »èÁ¦ sql ±¸¹®
+        MessageBox(NULL, L"È¸¿ø Á¤º¸ »èÁ¦Ã³¸® ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
     }
     if ((strcmp(op, "0") == 0)) {
         searchmember_resultlist();
@@ -694,27 +665,12 @@ void memberdetail_modify() {
     print_screen("admin_memberdetail_modify.txt");
 
     while (1) {
-        gotoxy(45, 6);
+        gotoxy(45, 7);
         fgets(user.id, sizeof(user.id), stdin);
         user.id[strcspn(user.id, "\n")] = '\0';
 
         if (strcmp(user.id, "\0") == 0) {
-            MessageBox(NULL, L"íšŒì› ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
-
-            continue;
-        }
-        else {
-            break;
-        }
-    }
-
-    while (1) {
-        gotoxy(45, 8);
-        fgets(user.name, sizeof(user.name), stdin);
-        user.name[strcspn(user.name, "\n")] = '\0';
-
-        if (strcmp(user.name, "\0") == 0) {
-            MessageBox(NULL, L"íšŒì› ì´ë¦„ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"È¸¿ø ¹øÈ£¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -725,11 +681,11 @@ void memberdetail_modify() {
 
     while (1) {
         gotoxy(45, 10);
-        fgets(user.birth, sizeof(user.birth), stdin);
-        user.birth[strcspn(user.birth, "\n")] = '\0';
+        fgets(user.name, sizeof(user.name), stdin);
+        user.name[strcspn(user.name, "\n")] = '\0';
 
-        if (strcmp(user.birth, "\0") == 0) {
-            MessageBox(NULL, L"íšŒì› ìƒë…„ì›”ì¼ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+        if (strcmp(user.name, "\0") == 0) {
+            MessageBox(NULL, L"È¸¿ø ÀÌ¸§À» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -737,6 +693,7 @@ void memberdetail_modify() {
             break;
         }
     }
+    MessageBox(NULL, L"È¸¿ø Á¤º¸ ¼öÁ¤ ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 }
 
 void createbook() {
@@ -750,7 +707,7 @@ void createbook() {
         book.number[strcspn(book.number, "\n")] = '\0';
 
         if (strcmp(book.number, "\0") == 0) {
-            MessageBox(NULL, L"ë„ì„œ ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"µµ¼­ ¹øÈ£¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -765,7 +722,7 @@ void createbook() {
         book.title[strcspn(book.title, "\n")] = '\0';
 
         if (strcmp(book.title, "\0") == 0) {
-            MessageBox(NULL, L"ë„ì„œ ì œëª©ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"µµ¼­ Á¦¸ñÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -779,8 +736,8 @@ void createbook() {
         fgets(book.author, sizeof(book.author), stdin);
         book.author[strcspn(book.author, "\n")] = '\0';
 
-        if (strcmp(user.id, "\0") == 0) {
-            MessageBox(NULL, L"ë„ì„œ ì €ìë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+        if (strcmp(book.author, "\0") == 0) {
+            MessageBox(NULL, L"µµ¼­ ÀúÀÚ¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -795,7 +752,7 @@ void createbook() {
         book.publisher[strcspn(book.publisher, "\n")] = '\0';
 
         if (strcmp(book.publisher, "\0") == 0) {
-            MessageBox(NULL, L"ë„ì„œ ì¶œíŒì‚¬ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"µµ¼­ ÃâÆÇ»ç¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 
             continue;
         }
@@ -804,7 +761,7 @@ void createbook() {
         }
     }
 
-    MessageBox(NULL, L"ë„ì„œ ì¶”ê°€ ì™„ë£Œ.", L"ì•Œë¦¼", MB_OK | MB_ICONINFORMATION);
+    MessageBox(NULL, L"µµ¼­ Ãß°¡ ¿Ï·á.", L"¾Ë¸²", MB_OK | MB_ICONINFORMATION);
 }
 
 void print_screen(char fname[])
